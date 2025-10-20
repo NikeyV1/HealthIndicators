@@ -33,6 +33,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static io.github.adytech99.healthindicators.enums.HeartTypeEnum.addHardcoreIcon;
 import static io.github.adytech99.healthindicators.enums.HeartTypeEnum.addStatusIcon;
+
+
 @Mixin(LivingEntityRenderer.class)
 public abstract class EntityRendererMixin<T extends LivingEntity, S extends LivingEntityRenderState, M extends EntityModel<? super S>>
         extends EntityRenderer<T, S>
@@ -142,7 +144,7 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
                     float opacity = ModConfig.HANDLER.instance().health_bar_opacity / 100.0F;
                         orderedRenderCommandQueue.submitCustom(matrixStack, renderLayer, (matricesEntry, vertexConsumer) -> {
                             Matrix4f m = matricesEntry.getPositionMatrix();
-                            RenderUtils.drawHeart(m, vertexConsumer, x, renderType, livingEntity, opacity);
+                            RenderUtils.drawHeart(m, vertexConsumer, x, renderType, livingEntity, opacity, d);
                         });
                 } else {
                     HeartTypeEnum type;
@@ -178,7 +180,7 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
                         float opacity = ModConfig.HANDLER.instance().health_bar_opacity / 100.0F;
                         orderedRenderCommandQueue.submitCustom(matrixStack, renderLayer, (matricesEntry, vertexConsumer) -> {
                             Matrix4f m = matricesEntry.getPositionMatrix();
-                            RenderUtils.drawHeart(m, vertexConsumer, x, renderType, livingEntity, opacity);
+                            RenderUtils.drawHeart(m, vertexConsumer, x, renderType, livingEntity, opacity, d);
                         });
                     }
                 }
@@ -287,7 +289,7 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
                     float opacity = ModConfig.HANDLER.instance().health_bar_opacity / 100.0F;
                     orderedRenderCommandQueue.submitCustom(matrixStack, renderLayer, (matricesEntry, vertexConsumer) -> {
                         Matrix4f m = matricesEntry.getPositionMatrix();
-                        RenderUtils.drawArmor(m, vertexConsumer, x, renderType, opacity);
+                        RenderUtils.drawArmor(m, vertexConsumer, x, renderType, opacity, d);
                     });
                 }
                 matrixStack.pop();

@@ -9,10 +9,14 @@ import org.joml.Matrix4f;
 
 public class RenderUtils {
     public static void drawHeart(Matrix4f model, VertexConsumer vertexConsumer, float x, HeartTypeEnum type, LivingEntity livingEntity) {
-        drawHeart(model, vertexConsumer, x, type, livingEntity, 1.0F);
+        drawHeart(model, vertexConsumer, x, type, livingEntity, 1.0F, 0.0);
     }
 
     public static void drawHeart(Matrix4f model, VertexConsumer vertexConsumer, float x, HeartTypeEnum type, LivingEntity livingEntity, float opacity) {
+        drawHeart(model, vertexConsumer, x, type, livingEntity, opacity, 0.0);
+    }
+
+    public static void drawHeart(Matrix4f model, VertexConsumer vertexConsumer, float x, HeartTypeEnum type, LivingEntity livingEntity, float opacity, double squaredDistance) {
         float minU = 0F;
         float maxU = 1F;
         float minV = 0F;
@@ -20,8 +24,12 @@ public class RenderUtils {
 
         float heartSize = 9F;
         
-        // fix z index
-        float z = (type == HeartTypeEnum.EMPTY) ? -0.01F : 0.01F;
+        // Scale Z-offset based on distance
+        float baseOffset = 0.01F;
+        float distanceScale = 1.0F + (float)(Math.sqrt(squaredDistance) * 0.001F);
+        float scaledOffset = baseOffset * distanceScale;
+        
+        float z = (type == HeartTypeEnum.EMPTY) ? -scaledOffset : scaledOffset;
 
         vertexConsumer.vertex(model, x, 0F - heartSize, z).texture(minU, maxV).light(15728880).color(1.0F, 1.0F, 1.0F, opacity);
         vertexConsumer.vertex(model, x - heartSize, 0F - heartSize, z).texture(maxU, maxV).light(15728880).color(1.0F, 1.0F, 1.0F, opacity);
@@ -30,10 +38,14 @@ public class RenderUtils {
     }
 
     public static void drawArmor(Matrix4f model, VertexConsumer vertexConsumer, float x, ArmorTypeEnum type) {
-        drawArmor(model, vertexConsumer, x, type, 1.0F);
+        drawArmor(model, vertexConsumer, x, type, 1.0F, 0.0);
     }
 
     public static void drawArmor(Matrix4f model, VertexConsumer vertexConsumer, float x, ArmorTypeEnum type, float opacity) {
+        drawArmor(model, vertexConsumer, x, type, opacity, 0.0);
+    }
+
+    public static void drawArmor(Matrix4f model, VertexConsumer vertexConsumer, float x, ArmorTypeEnum type, float opacity, double squaredDistance) {
         float minU = 0F;
         float maxU = 1F;
         float minV = 0F;
@@ -41,8 +53,12 @@ public class RenderUtils {
 
         float armorSize = 9F;
         
-        // again fix z index
-        float z = (type == ArmorTypeEnum.EMPTY) ? -0.01F : 0.01F;
+        // Scale Z-offset
+        float baseOffset = 0.01F;
+        float distanceScale = 1.0F + (float)(Math.sqrt(squaredDistance) * 0.001F);
+        float scaledOffset = baseOffset * distanceScale;
+        
+        float z = (type == ArmorTypeEnum.EMPTY) ? -scaledOffset : scaledOffset;
 
         vertexConsumer.vertex(model, x, 0F - armorSize, z).texture(minU, maxV).light(15728880).color(1.0F, 1.0F, 1.0F, opacity);
         vertexConsumer.vertex(model, x - armorSize, 0F - armorSize, z).texture(maxU, maxV).light(15728880).color(1.0F, 1.0F, 1.0F, opacity);
