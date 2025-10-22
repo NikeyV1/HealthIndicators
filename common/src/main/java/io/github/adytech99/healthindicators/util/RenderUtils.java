@@ -17,6 +17,10 @@ public class RenderUtils {
     }
 
     public static void drawHeart(Matrix4f model, VertexConsumer vertexConsumer, float x, HeartTypeEnum type, LivingEntity livingEntity, float opacity, double squaredDistance) {
+        drawHeart(model, vertexConsumer, x, type, livingEntity, opacity, squaredDistance, false);
+    }
+    
+    public static void drawHeart(Matrix4f model, VertexConsumer vertexConsumer, float x, HeartTypeEnum type, LivingEntity livingEntity, float opacity, double squaredDistance, boolean isObstructed) {
         float minU = 0F;
         float maxU = 1F;
         float minV = 0F;
@@ -24,12 +28,14 @@ public class RenderUtils {
 
         float heartSize = 9F;
         
-        // Scale Z-offset based on distance
-        float baseOffset = 0.01F;
-        float distanceScale = 1.0F + (float)(Math.sqrt(squaredDistance) * 0.001F);
-        float scaledOffset = baseOffset * distanceScale;
-        
-        float z = (type == HeartTypeEnum.EMPTY) ? -scaledOffset : scaledOffset;
+        // Z offset only when non-see through, might change later.
+        float z = 0F;
+        if (!isObstructed) {
+            float baseOffset = 0.01F;
+            float distanceScale = 1.0F + (float)(Math.sqrt(squaredDistance) * 0.001F);
+            float scaledOffset = baseOffset * distanceScale;
+            z = (type == HeartTypeEnum.EMPTY) ? -scaledOffset : scaledOffset;
+        }
 
         vertexConsumer.vertex(model, x, 0F - heartSize, z).texture(minU, maxV).light(15728880).color(1.0F, 1.0F, 1.0F, opacity);
         vertexConsumer.vertex(model, x - heartSize, 0F - heartSize, z).texture(maxU, maxV).light(15728880).color(1.0F, 1.0F, 1.0F, opacity);
@@ -46,6 +52,10 @@ public class RenderUtils {
     }
 
     public static void drawArmor(Matrix4f model, VertexConsumer vertexConsumer, float x, ArmorTypeEnum type, float opacity, double squaredDistance) {
+        drawArmor(model, vertexConsumer, x, type, opacity, squaredDistance, false);
+    }
+    
+    public static void drawArmor(Matrix4f model, VertexConsumer vertexConsumer, float x, ArmorTypeEnum type, float opacity, double squaredDistance, boolean isObstructed) {
         float minU = 0F;
         float maxU = 1F;
         float minV = 0F;
@@ -53,12 +63,13 @@ public class RenderUtils {
 
         float armorSize = 9F;
         
-        // Scale Z-offset
-        float baseOffset = 0.01F;
-        float distanceScale = 1.0F + (float)(Math.sqrt(squaredDistance) * 0.001F);
-        float scaledOffset = baseOffset * distanceScale;
-        
-        float z = (type == ArmorTypeEnum.EMPTY) ? -scaledOffset : scaledOffset;
+        float z = 0F;
+        if (!isObstructed) {
+            float baseOffset = 0.01F;
+            float distanceScale = 1.0F + (float)(Math.sqrt(squaredDistance) * 0.001F);
+            float scaledOffset = baseOffset * distanceScale;
+            z = (type == ArmorTypeEnum.EMPTY) ? -scaledOffset : scaledOffset;
+        }
 
         vertexConsumer.vertex(model, x, 0F - armorSize, z).texture(minU, maxV).light(15728880).color(1.0F, 1.0F, 1.0F, opacity);
         vertexConsumer.vertex(model, x - armorSize, 0F - armorSize, z).texture(maxU, maxV).light(15728880).color(1.0F, 1.0F, 1.0F, opacity);

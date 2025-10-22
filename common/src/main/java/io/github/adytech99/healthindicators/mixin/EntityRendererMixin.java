@@ -12,6 +12,7 @@ import net.minecraft.text.Text;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.command.OrderedRenderCommandQueue;
+import net.minecraft.client.render.command.RenderCommandQueue;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
@@ -101,6 +102,12 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
         // Check if entity is obstructed by blocks
         boolean isObstructed = ModConfig.HANDLER.instance().show_through_walls; // && isEntityObstructedByBlocks(livingEntity);
         for (int isDrawingEmpty = 0; isDrawingEmpty < 2; isDrawingEmpty++) {
+            //   Order 1: Empty hearts (background)
+            //   Order 2: Filled hearts (foreground)
+            RenderCommandQueue targetQueue = isObstructed ? 
+                orderedRenderCommandQueue.getBatchingQueue(isDrawingEmpty) : 
+                orderedRenderCommandQueue;
+            
             for (int heart = 0; heart < heartsTotal; heart++) {
                 if (heart % heartsPerRow == 0) {
                     h = heart / heartDensity;
@@ -134,7 +141,7 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
                     // Get vertex consumer for this specific texture with appropriate render layer
                     RenderLayer renderLayer;
                     if (isObstructed) {
-                        // See through walls
+                        // Use see-through render layer
                         renderLayer = RenderLayer.getTextSeeThrough(heartTextureId);
                     } else {
                         // Use normal text render layer
@@ -142,9 +149,9 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
                     }
                     final HeartTypeEnum renderType = type;
                     float opacity = ModConfig.HANDLER.instance().health_bar_opacity / 100.0F;
-                        orderedRenderCommandQueue.submitCustom(matrixStack, renderLayer, (matricesEntry, vertexConsumer) -> {
+                        targetQueue.submitCustom(matrixStack, renderLayer, (matricesEntry, vertexConsumer) -> {
                             Matrix4f m = matricesEntry.getPositionMatrix();
-                            RenderUtils.drawHeart(m, vertexConsumer, x, renderType, livingEntity, opacity, d);
+                            RenderUtils.drawHeart(m, vertexConsumer, x, renderType, livingEntity, opacity, d, isObstructed);
                         });
                 } else {
                     HeartTypeEnum type;
@@ -178,9 +185,9 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
                         }
                         final HeartTypeEnum renderType = type;
                         float opacity = ModConfig.HANDLER.instance().health_bar_opacity / 100.0F;
-                        orderedRenderCommandQueue.submitCustom(matrixStack, renderLayer, (matricesEntry, vertexConsumer) -> {
+                        targetQueue.submitCustom(matrixStack, renderLayer, (matricesEntry, vertexConsumer) -> {
                             Matrix4f m = matricesEntry.getPositionMatrix();
-                            RenderUtils.drawHeart(m, vertexConsumer, x, renderType, livingEntity, opacity, d);
+                            RenderUtils.drawHeart(m, vertexConsumer, x, renderType, livingEntity, opacity, d, isObstructed);
                         });
                     }
                 }
@@ -253,6 +260,11 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
     double h = 0;
         
         for (int isDrawingEmpty = 0; isDrawingEmpty < 2; isDrawingEmpty++) {
+            // Again, switch to batching queues for see-through mode
+            RenderCommandQueue targetQueue = isObstructed ? 
+                orderedRenderCommandQueue.getBatchingQueue(isDrawingEmpty + 2) : 
+                orderedRenderCommandQueue;
+            
             for (int pointCount = 0; pointCount < pointsTotal; pointCount++) {
                 if (pointCount % pointsPerRow == 0) {
                     h = (scale*10)*((pointCount/2 + pointsPerRow - 1) / pointsPerRow);
@@ -273,23 +285,22 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
                 matrixStack.translate(0, ModConfig.HANDLER.instance().display_offset, 0);
                 float x = maxX - (pointCount % pointsPerRow) * 8;
                 ArmorTypeEnum type = (isDrawingEmpty == 0) ? ArmorTypeEnum.EMPTY : (pointCount < armorPoints ? ((pointCount == armorPoints - 1 && lastPointHalf) ? ArmorTypeEnum.HALF : ArmorTypeEnum.FULL) : null);
-                // Only proceed with rendering if we have a valid type
                 if (type != null) {
                     Identifier armorTextureId = type.icon;
 
                     RenderLayer renderLayer;
                     if (isObstructed) {
-
+                        // Use see-through render layer
                         renderLayer = RenderLayer.getTextSeeThrough(armorTextureId);
                     } else {
-
+                        // Use normal text render layer
                         renderLayer = RenderLayer.getText(armorTextureId);
                     }
                     final ArmorTypeEnum renderType = type;
                     float opacity = ModConfig.HANDLER.instance().health_bar_opacity / 100.0F;
-                    orderedRenderCommandQueue.submitCustom(matrixStack, renderLayer, (matricesEntry, vertexConsumer) -> {
+                    targetQueue.submitCustom(matrixStack, renderLayer, (matricesEntry, vertexConsumer) -> {
                         Matrix4f m = matricesEntry.getPositionMatrix();
-                        RenderUtils.drawArmor(m, vertexConsumer, x, renderType, opacity, d);
+                        RenderUtils.drawArmor(m, vertexConsumer, x, renderType, opacity, d, isObstructed);
                     });
                 }
                 matrixStack.pop();
