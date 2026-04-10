@@ -34,9 +34,11 @@ public class ModCommands {
             .then(ClientCommandManager.literal("offset")
                 .then(ClientCommandManager.argument("offset", DoubleArgumentType.doubleArg())
                     .executes(context -> {
-                        ModConfig.HANDLER.instance().display_offset = DoubleArgumentType.getDouble(context, "offset");
+                        ModConfig.HANDLER.instance().display_offset = Math.clamp(
+                                DoubleArgumentType.getDouble(context, "offset"),
+                                -5.0, 5.0);
                         ModConfig.HANDLER.save();
-                        ConfigUtils.sendMessage(context.getSource().getPlayer(), Text.literal("Set heart offset to " + Util.truncate(ModConfig.HANDLER.instance().display_offset,2)));
+                        ConfigUtils.sendMessage(context.getSource().getPlayer(), Text.literal("Set heart offset to " + Util.truncate(ModConfig.getDisplayOffset(),2)));
                         return 1;
                     })))
 

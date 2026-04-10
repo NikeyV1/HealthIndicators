@@ -60,11 +60,6 @@ public class ModConfig {
     public boolean self = false;
 
     @SerialEntry
-    @AutoGen(category = "filters", group = "entity_type") 
-    @TickBox
-    public boolean show_through_walls = false;
-
-    @SerialEntry
     @AutoGen(category = "filters")
     @Boolean(formatter = Boolean.Formatter.CUSTOM)
     public boolean blacklistOrWhitelist = true;
@@ -242,7 +237,7 @@ public class ModConfig {
 
     @SerialEntry
     @AutoGen(category = "appearance", group = "offset")
-    @DoubleSlider(min = 0.0, max = 10.0, step = 0.5)
+    @DoubleSlider(min = 0.0, max = 5.0, step = 0.5)
     public double offset_step_size = 1;
 
     @SerialEntry
@@ -320,6 +315,11 @@ public class ModConfig {
             return createScreen(parent);
         }
         return null;
+    }
+
+    // Hinzufügen:
+    public static double getDisplayOffset() {
+        return Math.clamp(HANDLER.instance().display_offset, -5.0, 5.0);
     }
 
 }

@@ -4,8 +4,8 @@
   "version": "${version}",
 
   "name": "Health Indicators",
-  "description": "Simple damage indicator mod that shows a floating health bar (or number) above Players and Mobs.",
-  "authors": ["AdyTech99"],
+  "description": "Simple damage indicator mod that shows a floating health bar (or number) above Players and Mobs. [Nikey Fork]",
+  "authors": ["AdyTech99", "Nikey"],
   "contributors": [
     "Translation key (ru_ru): Alexander317"
   ],

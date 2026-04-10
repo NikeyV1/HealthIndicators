@@ -100,7 +100,7 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
         double heartDensity = 50F - (Math.max(4F - Math.ceil((double) heartsTotal / heartsPerRow), -3F) * 5F);
         double h = 0;
         // Check if entity is obstructed by blocks
-        boolean shouldRenderThroughWalls = ModConfig.HANDLER.instance().show_through_walls && RenderTracker.isOkayToRenderThroughWalls(livingEntity); // && isEntityObstructedByBlocks(livingEntity);
+        boolean shouldRenderThroughWalls = false;
         for (int isDrawingEmpty = 0; isDrawingEmpty < 2; isDrawingEmpty++) {
             //   Order 1: Empty hearts (background)
             //   Order 2: Filled hearts (foreground)
@@ -129,7 +129,7 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
                 }
                 matrixStack.multiply(this.dispatcher.camera.getRotation());
                 matrixStack.scale(-scale, scale, scale);
-                matrixStack.translate(0, ModConfig.HANDLER.instance().display_offset, 0);
+                matrixStack.translate(0, ModConfig.getDisplayOffset(), 0);
                 float x = maxX - (heart % heartsPerRow) * 8;
                 if (isDrawingEmpty == 0) {
                     // Create heart texture identifier
@@ -201,7 +201,7 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
         double d = this.dispatcher.getSquaredDistanceToCamera(livingEntity);
         final T entAsT = (T) livingEntity;
         String healthText = RenderUtils.getHealthText(livingEntity);
-        boolean shouldRenderThroughWalls = ModConfig.HANDLER.instance().show_through_walls && RenderTracker.isOkayToRenderThroughWalls(livingEntity);
+        boolean shouldRenderThroughWalls = false;
         matrixStack.push();
         float scale = ModConfig.HANDLER.instance().size;
         matrixStack.translate(0, livingEntity.getHeight() + 0.5f, 0);
@@ -215,7 +215,7 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
         }
         matrixStack.multiply(this.dispatcher.camera.getRotation());
         matrixStack.scale(scale, -scale, scale);
-        matrixStack.translate(0, -ModConfig.HANDLER.instance().display_offset, 0);
+        matrixStack.translate(0, ModConfig.getDisplayOffset(), 0);
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
         float x = -textRenderer.getWidth(healthText) / 2.0f;
     TextRenderer.TextLayerType textLayerType = shouldRenderThroughWalls ?
@@ -256,7 +256,7 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
         float maxX = pixelsTotal / 2.0f;
         float scale = ModConfig.HANDLER.instance().size;
         // Check if entity is obstructed by blocks
-        boolean shouldRenderThroughWalls = ModConfig.HANDLER.instance().show_through_walls && RenderTracker.isOkayToRenderThroughWalls(livingEntity);
+        boolean shouldRenderThroughWalls = false;
     double h = 0;
         
         for (int isDrawingEmpty = 0; isDrawingEmpty < 2; isDrawingEmpty++) {
@@ -282,7 +282,7 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
                 }
                 matrixStack.multiply(this.dispatcher.camera.getRotation());
                 matrixStack.scale(-scale, scale, scale);
-                matrixStack.translate(0, ModConfig.HANDLER.instance().display_offset, 0);
+                matrixStack.translate(0, ModConfig.getDisplayOffset(), 0);
                 float x = maxX - (pointCount % pointsPerRow) * 8;
                 ArmorTypeEnum type = (isDrawingEmpty == 0) ? ArmorTypeEnum.EMPTY : (pointCount < armorPoints ? ((pointCount == armorPoints - 1 && lastPointHalf) ? ArmorTypeEnum.HALF : ArmorTypeEnum.FULL) : null);
                 if (type != null) {

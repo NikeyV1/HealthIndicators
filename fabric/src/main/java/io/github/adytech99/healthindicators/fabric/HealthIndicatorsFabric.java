@@ -1,6 +1,7 @@
 package io.github.adytech99.healthindicators.fabric;
 
 import io.github.adytech99.healthindicators.HealthIndicatorsCommon;
+import io.github.adytech99.healthindicators.PingPayload;
 import io.github.adytech99.healthindicators.RenderTracker;
 import io.github.adytech99.healthindicators.config.Config;
 import io.github.adytech99.healthindicators.config.ModConfig;
@@ -12,6 +13,8 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
@@ -60,6 +63,12 @@ public class HealthIndicatorsFabric implements ClientModInitializer {
     public void onInitializeClient() {
         HealthIndicatorsCommon.init();
         if(ModConfig.HANDLER.instance().enable_commands) ModCommands.registerCommands();
+
+        PayloadTypeRegistry.playC2S().register(PingPayload.ID, PingPayload.CODEC);
+
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            sender.sendPacket(new PingPayload());
+        });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             HealthIndicatorsCommon.tick();

@@ -10,6 +10,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -21,6 +22,9 @@ public final class HealthIndicatorsCommon {
     public static MinecraftClient client = MinecraftClient.getInstance();
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final KeyBinding.Category HEALTH_INDICATORS_CATEGORY = KeyBinding.Category.create(Identifier.of(MOD_ID, "main"));
+
+    public static final CustomPayload.Id<PingPayload> HANDSHAKE_CHANNEL =
+            new CustomPayload.Id<>(Identifier.of(MOD_ID, "handshake"));
 
     private static boolean changed = false;
     private static boolean openConfig = false;
@@ -86,14 +90,16 @@ public final class HealthIndicatorsCommon {
     }
 
     public static void increaseOffset(){
-        ModConfig.HANDLER.instance().display_offset = (ModConfig.HANDLER.instance().display_offset + ModConfig.HANDLER.instance().offset_step_size);
+        ModConfig.HANDLER.instance().display_offset = Math.clamp(ModConfig.HANDLER.instance().display_offset + ModConfig.HANDLER.instance().offset_step_size, -5.0, 5.0);
         changed = true;
         if (client != null && client.player != null) {
             ConfigUtils.sendMessage(client.player, Text.literal("Set heart offset to " + Util.truncate(ModConfig.HANDLER.instance().display_offset,2)));
         }
     }
     public static void decreaseOffset(){
-        ModConfig.HANDLER.instance().display_offset = (ModConfig.HANDLER.instance().display_offset - ModConfig.HANDLER.instance().offset_step_size);
+        ModConfig.HANDLER.instance().display_offset = Math.clamp(
+                ModConfig.HANDLER.instance().display_offset - ModConfig.HANDLER.instance().offset_step_size,
+                -5.0, 5.0);
         changed = true;
         if (client != null && client.player != null) {
             ConfigUtils.sendMessage(client.player, Text.literal("Set heart offset to " + Util.truncate(ModConfig.HANDLER.instance().display_offset,2)));
