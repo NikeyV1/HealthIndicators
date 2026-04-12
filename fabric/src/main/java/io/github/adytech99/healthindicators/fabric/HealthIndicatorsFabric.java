@@ -14,10 +14,10 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.util.Identifier;
 
 import static io.github.adytech99.healthindicators.HealthIndicatorsCommon.HEALTH_INDICATORS_CATEGORY;
 
@@ -65,6 +65,9 @@ public class HealthIndicatorsFabric implements ClientModInitializer {
         if(ModConfig.HANDLER.instance().enable_commands) ModCommands.registerCommands();
 
         PayloadTypeRegistry.playC2S().register(PingPayload.ID, PingPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(PingPayload.ID, PingPayload.CODEC);
+
+        ClientPlayNetworking.registerGlobalReceiver(PingPayload.ID, (payload, context) -> {});
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             sender.sendPacket(new PingPayload());
