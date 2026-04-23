@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "healthindicators",
-  "version": "${version}",
+  "version": "21.11.1",
 
   "name": "Health Indicators",
   "description": "Simple damage indicator mod that shows a floating health bar (or number) above Players and Mobs. [Nikey Fork]",
@@ -11,9 +11,9 @@
   ],
 
   "contact": {
-    "homepage": "https://modrinth.com/mod/health-indicators-fairplay",
-    "sources": "https://github.com/NikeyV1/HealthIndicators",
-    "issues": "https://github.com/NikeyV1/HealthIndicators/issues"
+    "homepage": "https://modrinth.com/mod/health-indicators",
+    "sources": "https://github.com/AdyTech99/HealthIndicators",
+    "issues": "https://github.com/AdyTech99/HealthIndicators/issues"
   },
 
   "custom": {
