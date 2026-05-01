@@ -96,7 +96,7 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
         int heartsPerRow = ModConfig.HANDLER.instance().icons_per_row;
         int pixelsTotal = Math.min(heartsTotal, heartsPerRow) * 8 + 1;
         float maxX = pixelsTotal / 2.0f;
-        float scale = ModConfig.HANDLER.instance().size;
+        float scale = ModConfig.getSize();
         double heartDensity = 50F - (Math.max(4F - Math.ceil((double) heartsTotal / heartsPerRow), -3F) * 5F);
         double h = 0;
         // Check if entity is obstructed by blocks
@@ -203,7 +203,7 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
         String healthText = RenderUtils.getHealthText(livingEntity);
         boolean shouldRenderThroughWalls = false;
         matrixStack.push();
-        float scale = ModConfig.HANDLER.instance().size;
+        float scale = ModConfig.getSize();
         matrixStack.translate(0, livingEntity.getHeight() + 0.5f, 0);
     if ((this.hasLabel(entAsT, d)
                 || (ModConfig.HANDLER.instance().force_higher_offset_for_players && livingEntity instanceof PlayerEntity && livingEntity != client.player))
@@ -254,7 +254,7 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
         int pointsPerRow = ModConfig.HANDLER.instance().icons_per_row;
         int pixelsTotal = Math.min(pointsTotal, pointsPerRow) * 8 + 1;
         float maxX = pixelsTotal / 2.0f;
-        float scale = ModConfig.HANDLER.instance().size;
+        float scale = ModConfig.getSize();
         // Check if entity is obstructed by blocks
         boolean shouldRenderThroughWalls = false;
     double h = 0;

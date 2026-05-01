@@ -62,7 +62,6 @@ public class HealthIndicatorsFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         HealthIndicatorsCommon.init();
-        if(ModConfig.HANDLER.instance().enable_commands) ModCommands.registerCommands();
 
         PayloadTypeRegistry.playC2S().register(PingPayload.ID, PingPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(PingPayload.ID, PingPayload.CODEC);
@@ -70,7 +69,11 @@ public class HealthIndicatorsFabric implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(PingPayload.ID, (payload, context) -> {});
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            sender.sendPacket(new PingPayload());
+            String version = net.fabricmc.loader.api.FabricLoader.getInstance()
+                    .getModContainer(MOD_ID)
+                    .map(c -> c.getMetadata().getVersion().getFriendlyString())
+                    .orElse("unknown");
+            sender.sendPacket(new PingPayload(version));
         });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {

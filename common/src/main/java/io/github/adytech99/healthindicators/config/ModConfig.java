@@ -226,7 +226,7 @@ public class ModConfig {
 
     @SerialEntry
     @AutoGen(category = "appearance", group = "indicator_type")
-    @FloatSlider(min = 0.0f, max = 0.1f, step = 0.005f, format = "%.3f")
+    @FloatSlider(min = 0.010f, max = 0.030f, step = 0.005f, format = "%.3f")
     public float size = 0.025f;
 
 
@@ -258,15 +258,6 @@ public class ModConfig {
     @AutoGen(category = "messages", group = "messages_appearance")
     @Boolean(colored = true)
     public boolean colored_messages = true;
-
-    @Label
-    @AutoGen(category = "messages", group = "commands")
-    private final Text commandsRestartWarning = Text.literal("For this section, a restart is required to apply any modifications").formatted(Formatting.RED);
-
-    @SerialEntry
-    @AutoGen(category = "messages", group = "commands")
-    @Boolean(formatter = Boolean.Formatter.YES_NO)
-    public boolean enable_commands = true;
 
     /*@SerialEntry
     @AutoGen(category = "appearance", group = "heart_offset")
@@ -320,6 +311,10 @@ public class ModConfig {
     // Hinzufügen:
     public static double getDisplayOffset() {
         return Math.clamp(HANDLER.instance().display_offset, -5.0, 5.0);
+    }
+
+    public static float getSize() {
+        return Math.clamp(HANDLER.instance().size, 0.010f, 0.030f);
     }
 
 }
