@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "id": "healthindicators",
+  "version": "21.11.2",
+
+  "name": "Health Indicators",
+  "description": "Simple damage indicator mod that shows a floating health bar (or number) above Players and Mobs. [Nikey Fork]",
+  "authors": ["AdyTech99", "Nikey"],
+  "contributors": [
+    "Translation key (ru_ru): Alexander317"
+  ],
+
+  "contact": {
+    "homepage": "https://modrinth.com/mod/health-indicators-fairplay",
+    "sources": "https://github.com/NikeyV1/HealthIndicators",
+    "issues": "https://github.com/NikeyV1/HealthIndicators/issues"
+  },
+
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.com/invite/4eWX2duHfJ"
+      },
+      "update_checker": true
+    }
+  },
+
+  "license": "LGPL v3",
+  "icon": "assets/healthindicators/icon.png",
+
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "io.github.adytech99.healthindicators.fabric.HealthIndicatorsFabric"
+    ],
+    "modmenu" : ["io.github.adytech99.healthindicators.fabric.config.ModMenuAPIImpl"]
+  },
+  "accessWidener": "healthindicators.accesswidener",
+  "mixins": [
+    "healthindicators.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.17.2",
+    "fabric": "*",
+    "minecraft": ">=1.21.11",
+    "architectury": ">=19.0.1",
+    "yet_another_config_lib_v3": "*",
+    "java": ">=21"
+  }
+}
