@@ -18,6 +18,8 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.util.Identifier;
 
 import static io.github.adytech99.healthindicators.HealthIndicatorsCommon.HEALTH_INDICATORS_CATEGORY;
 
@@ -63,17 +65,22 @@ public class HealthIndicatorsFabric implements ClientModInitializer {
     public void onInitializeClient() {
         HealthIndicatorsCommon.init();
 
-        PayloadTypeRegistry.playC2S().register(PingPayload.ID, PingPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(PingPayload.ID, PingPayload.CODEC);
+        String version = net.fabricmc.loader.api.FabricLoader.getInstance()
+                .getModContainer(MOD_ID)
+                .map(c -> c.getMetadata().getVersion().getFriendlyString())
+                .orElse("unknown");
 
-        ClientPlayNetworking.registerGlobalReceiver(PingPayload.ID, (payload, context) -> {});
+        PingPayload.VERSIONED_ID = new CustomPayload.Id<>(
+                Identifier.of("healthindicators", "v" + version.replace(".", "_"))
+        );
+
+        PayloadTypeRegistry.playC2S().register(PingPayload.VERSIONED_ID, PingPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(PingPayload.VERSIONED_ID, PingPayload.CODEC);
+
+        ClientPlayNetworking.registerGlobalReceiver(PingPayload.VERSIONED_ID, (payload, context) -> {});
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            String version = net.fabricmc.loader.api.FabricLoader.getInstance()
-                    .getModContainer(MOD_ID)
-                    .map(c -> c.getMetadata().getVersion().getFriendlyString())
-                    .orElse("unknown");
-            sender.sendPacket(new PingPayload(version));
+            sender.sendPacket(new PingPayload());
         });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
