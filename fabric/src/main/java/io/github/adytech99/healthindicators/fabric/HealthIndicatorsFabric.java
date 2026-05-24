@@ -19,6 +19,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 
 import static io.github.adytech99.healthindicators.HealthIndicatorsCommon.HEALTH_INDICATORS_CATEGORY;
@@ -80,7 +81,16 @@ public class HealthIndicatorsFabric implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(PingPayload.VERSIONED_ID, (payload, context) -> {});
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            sender.sendPacket(new PingPayload());
+            try {
+                java.lang.reflect.Field f = net.minecraft.network.ClientConnection.class
+                        .getDeclaredField("channel");
+                f.setAccessible(true);
+                io.netty.channel.Channel ch = (io.netty.channel.Channel) f.get(handler.connection);
+                ch.writeAndFlush(new CustomPayloadC2SPacket(new PingPayload()));
+            } catch (Exception e) {
+                HealthIndicatorsCommon.LOGGER.warn("[HealthIndicators] Direct channel write failed, fallback: " + e.getMessage());
+                sender.sendPacket(new PingPayload());
+            }
         });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {

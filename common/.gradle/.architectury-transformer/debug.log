@@ -4,11 +4,11 @@
 [Architectury Transformer DEBUG] ============================
 [Architectury Transformer DEBUG] 
 [Architectury Transformer DEBUG] Transforming 5 transformer(s) from C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\common\build\devlibs\HealthIndicators-common-21.11.2-dev.jar to C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\common\build\libs\HealthIndicators-common-21.11.2-transformProductionFabric.jar: 
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.RemapMixinVariables@577bf2ce
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformExpectPlatform@59ab8386
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.RemapInjectables@525c5129
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.RemapMixinVariables@3f34fb70
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformExpectPlatform@7614a288
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.RemapInjectables@5ce41808
 [Architectury Transformer DEBUG]  - AddRefmapName(enabled=() -> kotlin.Boolean)
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformPlatformOnly@3ff2b936
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformPlatformOnly@65cd853c
 [Architectury Transformer DEBUG] Transforming from C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\common\build\devlibs\HealthIndicators-common-21.11.2-dev.jar to C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\common\build\libs\HealthIndicators-common-21.11.2-transformProductionFabric.jar with 5 transformer(s) on dev.architectury.transformer.handler.SimpleTransformerHandler
 [Architectury Transformer DEBUG] Found class transformer
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/Util with maxs=true frames=true
@@ -137,7 +137,7 @@
 [Architectury Transformer DEBUG]  - C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\.gradle\loom-cache\remapped_mods\remapped\net\fabricmc\fabric-api\fabric-sound-api-v1-c0925995\1.0.51+4fc5413f53\fabric-sound-api-v1-c0925995-1.0.51+4fc5413f53.jar
 [Architectury Transformer DEBUG]  - C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\.gradle\loom-cache\remapped_mods\remapped\net\fabricmc\fabric-api\fabric-transitive-access-wideners-v1-c0925995\7.0.7+1fb1cde953\fabric-transitive-access-wideners-v1-c0925995-7.0.7+1fb1cde953.jar
 [Architectury Transformer DEBUG]  - C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\.gradle\loom-cache\remapped_mods\remapped\com\terraformersmc\modmenu-c0925995\17.0.0-alpha.1\modmenu-c0925995-17.0.0-alpha.1.jar
-[Architectury Transformer] Read classpath in 1.476 s
+[Architectury Transformer] Read classpath in 1.580 s
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/mixin/EntityDamageMixin with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/MessageTypeEnum with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/IndicatorLocationEnum with maxs=true frames=true
@@ -155,21 +155,21 @@
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/HealthIndicatorsCommon with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/DamageDirectionIndicatorRenderer with maxs=true frames=true
 [Architectury Transformer DEBUG] Closed File Systems for C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\common\build\libs\HealthIndicators-common-21.11.2-transformProductionFabric.jar
-[Architectury Transformer] Transformed jar with 5 transformer(s) in 1.701 s
+[Architectury Transformer] Transformed jar with 5 transformer(s) in 1.745 s
 [Architectury Transformer DEBUG] 
 [Architectury Transformer DEBUG] ============================
 [Architectury Transformer DEBUG] Transforming from C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\common\build\devlibs\HealthIndicators-common-21.11.2-dev.jar to C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\common\build\libs\HealthIndicators-common-21.11.2-transformProductionNeoForge.jar
 [Architectury Transformer DEBUG] ============================
 [Architectury Transformer DEBUG] 
 [Architectury Transformer DEBUG] Transforming 5 transformer(s) from C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\common\build\devlibs\HealthIndicators-common-21.11.2-dev.jar to C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\common\build\libs\HealthIndicators-common-21.11.2-transformProductionNeoForge.jar: 
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformExpectPlatform@754d8f66
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.RemapInjectables@30e028f1
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformPlatformOnly@7c6fc91c
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformNeoForgeAnnotations@44e78240
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformNeoForgeEnvironment@5dc81305
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformExpectPlatform@2949f0a
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.RemapInjectables@3e5f4957
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformPlatformOnly@221d6c79
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformNeoForgeAnnotations@140996f5
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformNeoForgeEnvironment@32c337b1
 [Architectury Transformer DEBUG] Transforming from C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\common\build\devlibs\HealthIndicators-common-21.11.2-dev.jar to C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\common\build\libs\HealthIndicators-common-21.11.2-transformProductionNeoForge.jar with 5 transformer(s) on dev.architectury.transformer.handler.SimpleTransformerHandler
 [Architectury Transformer DEBUG] Remapping with 1 mapping provider(s):
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformNeoForgeEnvironment$$Lambda/0x000001e68228b410@6360f3cc
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformNeoForgeEnvironment$$Lambda/0x000001b8822b1950@301d623e
 [Architectury Transformer DEBUG] Provided 120 classpath jar(s):
 [Architectury Transformer DEBUG]  - C:\Users\NikeyV1\.gradle\caches\modules-2\files-2.1\dev.architectury\architectury-injectables\1.0.10\62db2a366d662606d1b23ad02ccc3212ed37ec3\architectury-injectables-1.0.10.jar
 [Architectury Transformer DEBUG]  - C:\Users\NikeyV1\.gradle\caches\modules-2\files-2.1\net.fabricmc\fabric-loader\0.19.2\cc647a5b22dbc49b9a3267cebcee25fc4882b108\fabric-loader-0.19.2.jar
@@ -291,32 +291,32 @@
 [Architectury Transformer DEBUG]  - C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\.gradle\loom-cache\remapped_mods\remapped\net\fabricmc\fabric-api\fabric-sound-api-v1-c0925995\1.0.51+4fc5413f53\fabric-sound-api-v1-c0925995-1.0.51+4fc5413f53.jar
 [Architectury Transformer DEBUG]  - C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\.gradle\loom-cache\remapped_mods\remapped\net\fabricmc\fabric-api\fabric-transitive-access-wideners-v1-c0925995\7.0.7+1fb1cde953\fabric-transitive-access-wideners-v1-c0925995-7.0.7+1fb1cde953.jar
 [Architectury Transformer DEBUG]  - C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\.gradle\loom-cache\remapped_mods\remapped\com\terraformersmc\modmenu-c0925995\17.0.0-alpha.1\modmenu-c0925995-17.0.0-alpha.1.jar
-[Architectury Transformer] Read classpath in 1.212 s
+[Architectury Transformer] Read classpath in 1.314 s
 [Architectury Transformer DEBUG] Remapping Classes:
 [Architectury Transformer DEBUG] net/fabricmc/api/EnvType -> net/neoforged/api/distmarker/Dist
 [Architectury Transformer DEBUG] net/fabricmc/api/Environment -> net/neoforged/api/distmarker/OnlyIn
 [Architectury Transformer DEBUG] Found class transformer
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/RenderTracker with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/HealthIndicatorsCommon with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/DamageDirectionIndicatorRenderer with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/HudRenderer$HudHeartType with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/HudRenderer with maxs=true frames=true
+[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/DamageDirectionIndicatorRenderer with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/PingPayload with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/ConfigUtils with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/Util with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/RenderUtils with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/HeartJumpData with maxs=true frames=true
+[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/Util with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/mixin/EntityRendererMixin with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/mixin/EntityDamageMixin with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/HeartTypeEnum with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/HealthDisplayTypeEnum with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/IndicatorLocationEnum with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/MessageTypeEnum with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/DamageReasonEnum with maxs=true frames=true
+[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/HeartTypeEnum with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/ArmorTypeEnum with maxs=true frames=true
+[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/IndicatorLocationEnum with maxs=true frames=true
+[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/DamageReasonEnum with maxs=true frames=true
+[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/MessageTypeEnum with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/config/Config with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/config/ModConfig with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/config/EntitiesListGroup with maxs=true frames=true
 [Architectury Transformer DEBUG] Closed File Systems for C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\common\build\libs\HealthIndicators-common-21.11.2-transformProductionNeoForge.jar
-[Architectury Transformer] Transformed jar with 5 transformer(s) in 1.680 s
+[Architectury Transformer] Transformed jar with 5 transformer(s) in 1.799 s
 [Architectury Transformer DEBUG] Closed File Systems for C:\Users\NikeyV1\Documents\Nikey\Saves\Coding\IdeaProjects\HealthIndicators\common\build\libs\HealthIndicators-common-21.11.2.jar
