@@ -26,6 +26,7 @@ import static io.github.adytech99.healthindicators.HealthIndicatorsCommon.HEALTH
 
 @Environment(EnvType.CLIENT)
 public class HealthIndicatorsFabric implements ClientModInitializer {
+
     public static final String MOD_ID = HealthIndicatorsCommon.MOD_ID;
 
     public static final KeyBinding HEARTS_RENDERING_ENABLED = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -45,11 +46,13 @@ public class HealthIndicatorsFabric implements ClientModInitializer {
             InputUtil.GLFW_KEY_RIGHT,
             HEALTH_INDICATORS_CATEGORY
     ));
+
     public static final KeyBinding INCREASE_HEART_OFFSET = KeyBindingHelper.registerKeyBinding(new KeyBinding(
             "key." + MOD_ID + ".increaseHeartOffset",
             InputUtil.GLFW_KEY_UP,
             HEALTH_INDICATORS_CATEGORY
     ));
+
     public static final KeyBinding DECREASE_HEART_OFFSET = KeyBindingHelper.registerKeyBinding(new KeyBinding(
             "key." + MOD_ID + ".decreaseHeartOffset",
             InputUtil.GLFW_KEY_DOWN,
@@ -66,61 +69,68 @@ public class HealthIndicatorsFabric implements ClientModInitializer {
     public void onInitializeClient() {
         HealthIndicatorsCommon.init();
 
-        String version = net.fabricmc.loader.api.FabricLoader.getInstance()
-                .getModContainer(MOD_ID)
-                .map(c -> c.getMetadata().getVersion().getFriendlyString())
-                .orElse("unknown");
-
-        PingPayload.VERSIONED_ID = new CustomPayload.Id<>(
-                Identifier.of("healthindicators", "v" + version.replace(".", "_"))
-        );
+        // ── Channel-Setup ────────────────────────────────────────────────────
+        // Fixer Handshake-Channel statt versioned ID.
+        // Vorteil: Server kennt immer "healthindicators:handshake" unabhängig
+        // von der Client-Version. Kein String-Matching auf "v1_0_0" etc. nötig.
+        PingPayload.VERSIONED_ID = HealthIndicatorsCommon.HANDSHAKE_CHANNEL;
 
         PayloadTypeRegistry.playC2S().register(PingPayload.VERSIONED_ID, PingPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(PingPayload.VERSIONED_ID, PingPayload.CODEC);
-
         ClientPlayNetworking.registerGlobalReceiver(PingPayload.VERSIONED_ID, (payload, context) -> {});
 
+        // ── Handshake beim Server-Join ───────────────────────────────────────
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             try {
-                java.lang.reflect.Field f = net.minecraft.network.ClientConnection.class
-                        .getDeclaredField("channel");
-                f.setAccessible(true);
-                io.netty.channel.Channel ch = (io.netty.channel.Channel) f.get(handler.connection);
-                ch.writeAndFlush(new CustomPayloadC2SPacket(new PingPayload()));
+                // Channel über Typ finden, nicht über String-Name (mapping-safe)
+                io.netty.channel.Channel ch = findFieldByType(
+                        findFieldByType(handler, net.minecraft.network.ClientConnection.class),
+                        io.netty.channel.Channel.class);
+
+                if (ch == null) throw new Exception("Channel nicht gefunden");
+
+                // opsec_filter Context holen → writeAndFlush darauf = geht durch encoder, überspringt opsec
+                io.netty.channel.ChannelHandlerContext opsecCtx = ch.pipeline().context("opsec_filter");
+                if (opsecCtx != null) {
+                    opsecCtx.writeAndFlush(new CustomPayloadC2SPacket(new PingPayload()));
+                    HealthIndicatorsCommon.LOGGER.info("[HealthIndicators] Bypass via opsec_filter context");
+                } else {
+                    ch.writeAndFlush(new CustomPayloadC2SPacket(new PingPayload()));
+                    HealthIndicatorsCommon.LOGGER.info("[HealthIndicators] Kein opsec_filter gefunden, direkt gesendet");
+                }
             } catch (Exception e) {
-                HealthIndicatorsCommon.LOGGER.warn("[HealthIndicators] Direct channel write failed, fallback: " + e.getMessage());
+                HealthIndicatorsCommon.LOGGER.warn("[HealthIndicators] Handshake fehlgeschlagen: " + e.getMessage());
                 sender.sendPacket(new PingPayload());
             }
         });
 
+        // ── Tick / Keybinds ──────────────────────────────────────────────────
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             HealthIndicatorsCommon.tick();
 
             while (HEARTS_RENDERING_ENABLED.wasPressed()) {
                 HealthIndicatorsCommon.enableHeartsRendering();
             }
-
             while (ARMOR_RENDERING_ENABLED.wasPressed()) {
                 HealthIndicatorsCommon.enableArmorRendering();
             }
-
             while (INCREASE_HEART_OFFSET.wasPressed()) {
                 HealthIndicatorsCommon.increaseOffset();
             }
-
             while (DECREASE_HEART_OFFSET.wasPressed()) {
                 HealthIndicatorsCommon.decreaseOffset();
             }
             if (OVERRIDE_ALL_FILTERS.isPressed()) {
                 HealthIndicatorsCommon.overrideFilters();
-            }
-            else if(Config.getOverrideAllFiltersEnabled()) {
+            } else if (Config.getOverrideAllFiltersEnabled()) {
                 HealthIndicatorsCommon.disableOverrideFilters();
             }
-
-            if(OPEN_CONFIG_SCREEN.wasPressed()) HealthIndicatorsCommon.openConfigScreen();
+            if (OPEN_CONFIG_SCREEN.wasPressed()) {
+                HealthIndicatorsCommon.openConfigScreen();
+            }
         });
 
+        // ── Entity / Lifecycle ───────────────────────────────────────────────
         ClientEntityEvents.ENTITY_UNLOAD.register((entity, world) -> {
             RenderTracker.removeFromUUIDS(entity);
         });
@@ -128,5 +138,21 @@ public class HealthIndicatorsFabric implements ClientModInitializer {
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
             ModConfig.HANDLER.save();
         });
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T findFieldByType(Object obj, Class<T> type) throws Exception {
+        if (obj == null) return null;
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            for (java.lang.reflect.Field f : clazz.getDeclaredFields()) {
+                if (type.isAssignableFrom(f.getType())) {
+                    f.setAccessible(true);
+                    return (T) f.get(obj);
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return null;
     }
 }

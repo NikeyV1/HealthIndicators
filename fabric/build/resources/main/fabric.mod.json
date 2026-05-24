@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "healthindicators",
-  "version": "21.11.2",
+  "version": "21.11.3",
 
   "name": "Health Indicators",
   "description": "Simple damage indicator mod that shows a floating health bar (or number) above Players and Mobs. [Nikey Fork]",

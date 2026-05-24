@@ -1,3 +1,4 @@
 accessWidener v2 named
 accessible method net/minecraft/client/render/BufferBuilder build ()Lnet/minecraft/client/render/BuiltBuffer;
 accessible field net/minecraft/client/network/ClientCommonNetworkHandler connection Lnet/minecraft/network/ClientConnection;
+accessible field net/minecraft/network/ClientConnection channel Lio/netty/channel/Channel;
