@@ -5,7 +5,6 @@ import io.github.adytech99.healthindicators.PingPayload;
 import io.github.adytech99.healthindicators.RenderTracker;
 import io.github.adytech99.healthindicators.config.Config;
 import io.github.adytech99.healthindicators.config.ModConfig;
-import io.github.adytech99.healthindicators.fabric.commands.ModCommands;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -70,36 +69,39 @@ public class HealthIndicatorsFabric implements ClientModInitializer {
         HealthIndicatorsCommon.init();
 
         // ── Channel-Setup ────────────────────────────────────────────────────
-        // Fixer Handshake-Channel statt versioned ID.
-        // Vorteil: Server kennt immer "healthindicators:handshake" unabhängig
-        // von der Client-Version. Kein String-Matching auf "v1_0_0" etc. nötig.
+        String version = net.fabricmc.loader.api.FabricLoader.getInstance()
+                .getModContainer(MOD_ID)
+                .map(c -> c.getMetadata().getVersion().getFriendlyString())
+                .orElse("unknown");
+
+        CustomPayload.Id<PingPayload> versionedId = new CustomPayload.Id<>(
+                Identifier.of("healthindicators", "v" + version.replace(".", "_"))
+        );
+        PayloadTypeRegistry.playC2S().register(versionedId, PingPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(versionedId, PingPayload.CODEC);
+        ClientPlayNetworking.registerGlobalReceiver(versionedId, (payload, context) -> {});
+
         PingPayload.VERSIONED_ID = HealthIndicatorsCommon.HANDSHAKE_CHANNEL;
-
         PayloadTypeRegistry.playC2S().register(PingPayload.VERSIONED_ID, PingPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(PingPayload.VERSIONED_ID, PingPayload.CODEC);
-        ClientPlayNetworking.registerGlobalReceiver(PingPayload.VERSIONED_ID, (payload, context) -> {});
 
-        // ── Handshake beim Server-Join ───────────────────────────────────────
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             try {
-                // Channel über Typ finden, nicht über String-Name (mapping-safe)
                 io.netty.channel.Channel ch = findFieldByType(
                         findFieldByType(handler, net.minecraft.network.ClientConnection.class),
                         io.netty.channel.Channel.class);
 
-                if (ch == null) throw new Exception("Channel nicht gefunden");
+                if (ch == null) throw new Exception("Channel not found");
 
-                // opsec_filter Context holen → writeAndFlush darauf = geht durch encoder, überspringt opsec
                 io.netty.channel.ChannelHandlerContext opsecCtx = ch.pipeline().context("opsec_filter");
                 if (opsecCtx != null) {
                     opsecCtx.writeAndFlush(new CustomPayloadC2SPacket(new PingPayload()));
-                    HealthIndicatorsCommon.LOGGER.info("[HealthIndicators] Bypass via opsec_filter context");
+                    HealthIndicatorsCommon.LOGGER.info("[HealthIndicators] Handshake sent (v" + version + ")");
                 } else {
                     ch.writeAndFlush(new CustomPayloadC2SPacket(new PingPayload()));
-                    HealthIndicatorsCommon.LOGGER.info("[HealthIndicators] Kein opsec_filter gefunden, direkt gesendet");
+                    HealthIndicatorsCommon.LOGGER.info("[HealthIndicators] Handshake sent (v" + version + ")");
                 }
             } catch (Exception e) {
-                HealthIndicatorsCommon.LOGGER.warn("[HealthIndicators] Handshake fehlgeschlagen: " + e.getMessage());
+                HealthIndicatorsCommon.LOGGER.warn("[HealthIndicators] Handshake failed: " + e.getMessage());
                 sender.sendPacket(new PingPayload());
             }
         });
