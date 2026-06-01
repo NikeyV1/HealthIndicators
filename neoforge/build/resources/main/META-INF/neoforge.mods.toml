@@ -5,7 +5,7 @@ license = "LGPL v3"
 
 [[mods]]
 modId = "healthindicators"
-version = "21.11.3"
+version = "21.11.4"
 displayName = "Health Indicators"
 authors = "AdyTech99"
 description = '''

@@ -3,6 +3,8 @@ package io.github.adytech99.healthindicators.fabric;
 import io.github.adytech99.healthindicators.HealthIndicatorsCommon;
 import io.github.adytech99.healthindicators.PingPayload;
 import io.github.adytech99.healthindicators.RenderTracker;
+import io.github.adytech99.healthindicators.ServerPermissionPayload;
+import io.github.adytech99.healthindicators.ServerPermissions;
 import io.github.adytech99.healthindicators.config.Config;
 import io.github.adytech99.healthindicators.config.ModConfig;
 import net.fabricmc.api.ClientModInitializer;
@@ -84,7 +86,14 @@ public class HealthIndicatorsFabric implements ClientModInitializer {
         PingPayload.VERSIONED_ID = HealthIndicatorsCommon.HANDSHAKE_CHANNEL;
         PayloadTypeRegistry.playC2S().register(PingPayload.VERSIONED_ID, PingPayload.CODEC);
 
+        PayloadTypeRegistry.playS2C().register(ServerPermissionPayload.ID, ServerPermissionPayload.CODEC);
+        ClientPlayNetworking.registerGlobalReceiver(ServerPermissionPayload.ID, (payload, context) -> {
+            ServerPermissions.setAllowInvisiblePlayers(payload.allowInvisiblePlayers());
+            HealthIndicatorsCommon.LOGGER.info("[HealthIndicators] Server permissions received: allowInvisible=" + payload.allowInvisiblePlayers());
+        });
+
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            ServerPermissions.reset();
             try {
                 io.netty.channel.Channel ch = findFieldByType(
                         findFieldByType(handler, net.minecraft.network.ClientConnection.class),
@@ -104,6 +113,10 @@ public class HealthIndicatorsFabric implements ClientModInitializer {
                 HealthIndicatorsCommon.LOGGER.warn("[HealthIndicators] Handshake failed: " + e.getMessage());
                 sender.sendPacket(new PingPayload());
             }
+        });
+
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            ServerPermissions.reset();
         });
 
         // ── Tick / Keybinds ──────────────────────────────────────────────────
