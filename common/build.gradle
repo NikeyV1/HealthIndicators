@@ -13,16 +13,15 @@ repositories {
 }
 
 dependencies {
-    // We depend on Fabric Loader here to use the Fabric @Environment annotations,
-    // which get remapped to the correct annotations on each platform.
-    // Do NOT use other classes from Fabric Loader.
+    // Fabric Loader: kept as modImplementation — Architectury Loom uses this for @Environment
+    // annotation cross-platform transform even in non-obfuscated mode. Do NOT use other classes.
     modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
 
-    // Architectury API. This is optional, and you can comment it out if you don't need it.
+    // Architectury API: kept as modImplementation for Architectury's namedElements transform pipeline.
     modImplementation "dev.architectury:architectury:$rootProject.architectury_api_version"
-    modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_fabric}"
+    implementation "dev.isxander:yet-another-config-lib:${project.yacl_fabric}"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    modApi "com.terraformersmc:modmenu:${project.modmenu}"
+    compileOnly "com.terraformersmc:modmenu:${project.modmenu}"
 }
 
 loom {

@@ -56,11 +56,10 @@ subprojects {
 
     dependencies {
         minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
-        // 26.2 is non-obfuscated: Yarn is dead, use official Mojang mappings.
-        mappings loom.officialMojangMappings()
+        // 26.2 is non-obfuscated — no ProGuard mappings file exists. Do NOT add mappings loom.officialMojangMappings().
+        // Loom 1.15+ (and Architectury Loom 1.17+) auto-detects non-obfuscated MC and skips remapping.
         // TODO[26.2-verify]: Mixin 0.8.5 may be too old for Java 25 / MC 26.2; bump if the AP fails.
         annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-
     }
 
     java {

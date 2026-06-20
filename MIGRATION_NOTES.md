@@ -41,11 +41,15 @@ old `1.13`/`1.14` lines. The **1.17.x** line (1.17.477, 2026-06-09) postdates it
 recommended Loom 1.17 for 26.2. We therefore **keep Architectury Loom + Forgix** (plugin id stays
 `dev.architectury.loom`, NOT `net.fabricmc.fabric-loom` — that id change is for pure Fabric Loom only).
 
-### Open build-mechanics question (`TODO[26.2-verify]` in fabric/ & neoforge/ build.gradle)
-For non-obfuscated 26.1+, upstream Fabric Loom stopped remapping, so `modImplementation`→`implementation`
-and `remapJar`→`jar`. It is **unconfirmed** whether Architectury Loom 1.17.477 adopted the same. The
-sub-project `build.gradle`s were left with the working `modImplementation`/`remapJar` config. If the
-local build reports those as unknown DSL, flip them to `implementation`/`compileOnly` and a plain `jar`.
+### Build-mechanics — RESOLVED (applied in fix/26.2-build-mechanics branch)
+For non-obfuscated 26.1+, Fabric Loom 1.15+ (and Architectury Loom 1.17+) skips all remapping:
+- **root build.gradle**: removed `mappings loom.officialMojangMappings()` — the ProGuard file does not
+  exist for non-obfuscated versions; this line caused "Failed to find official mojang mappings for 26.2".
+- **common/, fabric/, neoforge/**: `modImplementation`→`implementation` for regular deps;
+  `modApi`/`modImplementation`→`compileOnly` for modmenu. `fabric-loader` and `architectury[-fabric/-neoforge]`
+  kept as `modImplementation` — Architectury Loom still uses these for its cross-platform transform pipeline.
+- **fabric/ & neoforge/**: `remapJar { input.set ... }` → `jar { dependsOn shadowJar }` (remapJar task
+  is not created by Loom for non-obfuscated versions).
 
 ---
 
