@@ -1,19 +1,19 @@
 package io.github.adytech99.healthindicators;
 
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record PingPayload() implements CustomPayload {
+public record PingPayload() implements CustomPacketPayload {
 
-    // Wird zur Laufzeit mit der versionierten ID überschrieben
-    public static CustomPayload.Id<PingPayload> VERSIONED_ID;
+    // Overwritten at runtime with the versioned id (see HealthIndicatorsFabric / HANDSHAKE_CHANNEL).
+    public static CustomPacketPayload.Type<PingPayload> VERSIONED_ID;
 
-    public static final PacketCodec<PacketByteBuf, PingPayload> CODEC =
-            PacketCodec.unit(new PingPayload());
+    public static final StreamCodec<RegistryFriendlyByteBuf, PingPayload> CODEC =
+            StreamCodec.unit(new PingPayload());
 
     @Override
-    public Id<? extends CustomPayload> getId() {
+    public Type<? extends CustomPacketPayload> type() {
         return VERSIONED_ID;
     }
 }

@@ -17,11 +17,11 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import org.lwjgl.glfw.GLFW;
 
 import static io.github.adytech99.healthindicators.HealthIndicatorsCommon.HEALTH_INDICATORS_CATEGORY;
 
@@ -30,39 +30,41 @@ public class HealthIndicatorsFabric implements ClientModInitializer {
 
     public static final String MOD_ID = HealthIndicatorsCommon.MOD_ID;
 
-    public static final KeyBinding HEARTS_RENDERING_ENABLED = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+    // TODO[26.2-verify]: KeyMapping(String, int, KeyMapping.Category) ctor + Category API are new in
+    // 1.21.11; confirm the Mojmap shape against the official MC sources. GLFW key constants are stable.
+    public static final KeyMapping HEARTS_RENDERING_ENABLED = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key." + MOD_ID + ".renderingEnabled",
-            InputUtil.GLFW_KEY_LEFT,
+            GLFW.GLFW_KEY_LEFT,
             HEALTH_INDICATORS_CATEGORY
     ));
 
-    public static final KeyBinding ARMOR_RENDERING_ENABLED = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+    public static final KeyMapping ARMOR_RENDERING_ENABLED = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key." + MOD_ID + ".armorRenderingEnabled",
-            InputUtil.GLFW_KEY_RIGHT_SHIFT,
+            GLFW.GLFW_KEY_RIGHT_SHIFT,
             HEALTH_INDICATORS_CATEGORY
     ));
 
-    public static final KeyBinding OVERRIDE_ALL_FILTERS = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+    public static final KeyMapping OVERRIDE_ALL_FILTERS = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key." + MOD_ID + ".overrideAllFilters",
-            InputUtil.GLFW_KEY_RIGHT,
+            GLFW.GLFW_KEY_RIGHT,
             HEALTH_INDICATORS_CATEGORY
     ));
 
-    public static final KeyBinding INCREASE_HEART_OFFSET = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+    public static final KeyMapping INCREASE_HEART_OFFSET = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key." + MOD_ID + ".increaseHeartOffset",
-            InputUtil.GLFW_KEY_UP,
+            GLFW.GLFW_KEY_UP,
             HEALTH_INDICATORS_CATEGORY
     ));
 
-    public static final KeyBinding DECREASE_HEART_OFFSET = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+    public static final KeyMapping DECREASE_HEART_OFFSET = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key." + MOD_ID + ".decreaseHeartOffset",
-            InputUtil.GLFW_KEY_DOWN,
+            GLFW.GLFW_KEY_DOWN,
             HEALTH_INDICATORS_CATEGORY
     ));
 
-    public static final KeyBinding OPEN_CONFIG_SCREEN = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+    public static final KeyMapping OPEN_CONFIG_SCREEN = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key." + MOD_ID + ".openModMenuConfig",
-            InputUtil.GLFW_KEY_I,
+            GLFW.GLFW_KEY_I,
             HEALTH_INDICATORS_CATEGORY
     ));
 
@@ -71,13 +73,15 @@ public class HealthIndicatorsFabric implements ClientModInitializer {
         HealthIndicatorsCommon.init();
 
         // ── Channel-Setup ────────────────────────────────────────────────────
+        // TODO[26.2-verify]: confirm Fabric API networking class names for 26.2 (PayloadTypeRegistry,
+        // ClientPlayNetworking, ClientPlayConnectionEvents) against the official Fabric API rename list.
         String version = net.fabricmc.loader.api.FabricLoader.getInstance()
                 .getModContainer(MOD_ID)
                 .map(c -> c.getMetadata().getVersion().getFriendlyString())
                 .orElse("unknown");
 
-        CustomPayload.Id<PingPayload> versionedId = new CustomPayload.Id<>(
-                Identifier.of("healthindicators", "v" + version.replace(".", "_"))
+        CustomPacketPayload.Type<PingPayload> versionedId = new CustomPacketPayload.Type<>(
+                ResourceLocation.fromNamespaceAndPath("healthindicators", "v" + version.replace(".", "_"))
         );
         PayloadTypeRegistry.playC2S().register(versionedId, PingPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(versionedId, PingPayload.CODEC);
@@ -95,18 +99,20 @@ public class HealthIndicatorsFabric implements ClientModInitializer {
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             ServerPermissions.reset();
             try {
+                // findFieldByType is intentionally type-based (no mapped field names) so it survives
+                // remapping. Mojmap type: net.minecraft.network.Connection (was Yarn ClientConnection).
                 io.netty.channel.Channel ch = findFieldByType(
-                        findFieldByType(handler, net.minecraft.network.ClientConnection.class),
+                        findFieldByType(handler, net.minecraft.network.Connection.class),
                         io.netty.channel.Channel.class);
 
                 if (ch == null) throw new Exception("Channel not found");
 
                 io.netty.channel.ChannelHandlerContext opsecCtx = ch.pipeline().context("opsec_filter");
                 if (opsecCtx != null) {
-                    opsecCtx.writeAndFlush(new CustomPayloadC2SPacket(new PingPayload()));
+                    opsecCtx.writeAndFlush(new ServerboundCustomPayloadPacket(new PingPayload()));
                     HealthIndicatorsCommon.LOGGER.info("[HealthIndicators] Handshake sent (v" + version + ")");
                 } else {
-                    ch.writeAndFlush(new CustomPayloadC2SPacket(new PingPayload()));
+                    ch.writeAndFlush(new ServerboundCustomPayloadPacket(new PingPayload()));
                     HealthIndicatorsCommon.LOGGER.info("[HealthIndicators] Handshake sent (v" + version + ")");
                 }
             } catch (Exception e) {
@@ -120,27 +126,28 @@ public class HealthIndicatorsFabric implements ClientModInitializer {
         });
 
         // ── Tick / Keybinds ──────────────────────────────────────────────────
+        // KeyMapping Mojmap accessors: consumeClick() (was Yarn wasPressed), isDown() (was isPressed).
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             HealthIndicatorsCommon.tick();
 
-            while (HEARTS_RENDERING_ENABLED.wasPressed()) {
+            while (HEARTS_RENDERING_ENABLED.consumeClick()) {
                 HealthIndicatorsCommon.enableHeartsRendering();
             }
-            while (ARMOR_RENDERING_ENABLED.wasPressed()) {
+            while (ARMOR_RENDERING_ENABLED.consumeClick()) {
                 HealthIndicatorsCommon.enableArmorRendering();
             }
-            while (INCREASE_HEART_OFFSET.wasPressed()) {
+            while (INCREASE_HEART_OFFSET.consumeClick()) {
                 HealthIndicatorsCommon.increaseOffset();
             }
-            while (DECREASE_HEART_OFFSET.wasPressed()) {
+            while (DECREASE_HEART_OFFSET.consumeClick()) {
                 HealthIndicatorsCommon.decreaseOffset();
             }
-            if (OVERRIDE_ALL_FILTERS.isPressed()) {
+            if (OVERRIDE_ALL_FILTERS.isDown()) {
                 HealthIndicatorsCommon.overrideFilters();
             } else if (Config.getOverrideAllFiltersEnabled()) {
                 HealthIndicatorsCommon.disableOverrideFilters();
             }
-            if (OPEN_CONFIG_SCREEN.wasPressed()) {
+            if (OPEN_CONFIG_SCREEN.consumeClick()) {
                 HealthIndicatorsCommon.openConfigScreen();
             }
         });

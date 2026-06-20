@@ -1,2 +1,4 @@
 accessWidener v2 named
-accessible method net/minecraft/client/render/BufferBuilder build ()Lnet/minecraft/client/render/BuiltBuffer;
+# TODO[26.2-verify]: Yarn-named, only used by commented-out HUD code. Re-enable with Mojmap if needed:
+#   net/minecraft/client/render/BufferBuilder -> com/mojang/blaze3d/vertex/BufferBuilder (returns MeshData)
+# accessible method net/minecraft/client/render/BufferBuilder build ()Lnet/minecraft/client/render/BuiltBuffer;

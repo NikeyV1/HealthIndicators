@@ -1,7 +1,11 @@
 plugins {
-    id 'dev.architectury.loom' version '1.13-SNAPSHOT' apply false
+    // Architectury Loom 1.17.x is the first line that supports non-obfuscated MC 26.1+ (issue #328
+    // affected the older 1.13/1.14 lines). 1.17.477 = mvnrepository dev.architectury, 2026-06-09.
+    id 'dev.architectury.loom' version '1.17.477' apply false
+    // TODO[26.2-verify]: confirm architectury-plugin version compatible with 26.2 (was 3.4-SNAPSHOT).
     id 'architectury-plugin' version '3.4-SNAPSHOT'
     id 'com.gradleup.shadow' version '9.2.2' apply false
+    // TODO[26.2-verify]: confirm Forgix supports merging 26.2 fabric+neoforge jars (was 1.2.9).
     id 'io.github.pacifistmc.forgix' version "1.2.9"
 }
 
@@ -52,10 +56,9 @@ subprojects {
 
     dependencies {
         minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
-        mappings loom.layered {
-            it.mappings("net.fabricmc:yarn:$rootProject.yarn_mappings:v2")
-            it.mappings("dev.architectury:yarn-mappings-patch-neoforge:$rootProject.yarn_mappings_patch_neoforge_version")
-        }
+        // 26.2 is non-obfuscated: Yarn is dead, use official Mojang mappings.
+        mappings loom.officialMojangMappings()
+        // TODO[26.2-verify]: Mixin 0.8.5 may be too old for Java 25 / MC 26.2; bump if the AP fails.
         annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     }
@@ -66,12 +69,12 @@ subprojects {
         // If you remove this line, sources will not be generated.
         withSourcesJar()
 
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
     }
 
     tasks.withType(JavaCompile).configureEach {
-        it.options.release = 21
+        it.options.release = 25
     }
 
     // Configure Maven publishing.

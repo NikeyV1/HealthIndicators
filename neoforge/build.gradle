@@ -40,6 +40,8 @@ loom {
     accessWidenerPath = file("src/main/resources/healthindicators.accesswidener")
 }
 
+// TODO[26.2-verify]: see fabric/build.gradle — same uncertainty about modImplementation/remapJar vs
+// implementation/jar under Architectury Loom 1.17.477 for non-obfuscated 26.1+. See MIGRATION_NOTES.md.
 dependencies {
     neoForge "net.neoforged:neoforge:$rootProject.neoforge_version"
 

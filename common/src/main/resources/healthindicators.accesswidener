@@ -1,6 +1,8 @@
 accessWidener v2 named
 
-accessible field net/minecraft/client/texture/TextureManager resourceContainer Lnet/minecraft/resource/ResourceManager;
+# TODO[26.2-verify]: Yarn-named, unused in active code. If re-enabled, remap to Mojmap:
+#   net/minecraft/client/texture/TextureManager -> net/minecraft/client/renderer/texture/TextureManager
+# accessible field net/minecraft/client/texture/TextureManager resourceContainer Lnet/minecraft/resource/ResourceManager;
 
 #accessible field net/minecraft/client/render/RenderLayer$MultiPhase phases Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
 

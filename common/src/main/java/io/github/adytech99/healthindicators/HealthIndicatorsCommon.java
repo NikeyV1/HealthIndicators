@@ -10,7 +10,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -23,8 +23,10 @@ public final class HealthIndicatorsCommon {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final KeyBinding.Category HEALTH_INDICATORS_CATEGORY = KeyBinding.Category.create(Identifier.of(MOD_ID, "main"));
 
-    public static final CustomPayload.Id<PingPayload> HANDSHAKE_CHANNEL =
-            new CustomPayload.Id<>(Identifier.of(MOD_ID, "handshake"));
+    // Structural networking change (CustomPayload.Id -> CustomPacketPayload.Type). The Identifier.of
+    // call below is left for the IntelliJ migration map to convert to ResourceLocation.fromNamespaceAndPath.
+    public static final CustomPacketPayload.Type<PingPayload> HANDSHAKE_CHANNEL =
+            new CustomPacketPayload.Type<>(Identifier.of(MOD_ID, "handshake"));
 
     private static boolean changed = false;
     private static boolean openConfig = false;

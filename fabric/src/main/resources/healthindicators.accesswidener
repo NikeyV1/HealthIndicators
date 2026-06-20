@@ -1,4 +1,12 @@
 accessWidener v2 named
-accessible method net/minecraft/client/render/BufferBuilder build ()Lnet/minecraft/client/render/BuiltBuffer;
-accessible field net/minecraft/client/network/ClientCommonNetworkHandler connection Lnet/minecraft/network/ClientConnection;
-accessible field net/minecraft/network/ClientConnection channel Lio/netty/channel/Channel;
+# TODO[26.2-verify]: all entries below are Yarn-named. The OpSec netty access in
+# HealthIndicatorsFabric reaches Connection.channel via findFieldByType reflection
+# (setAccessible), so these AW widenings are redundant there. BufferBuilder.build()
+# is only used by commented-out HUD code. Re-enable with Mojmap names if direct access
+# is needed, e.g.:
+#   net/minecraft/network/ClientConnection             -> net/minecraft/network/Connection
+#   net/minecraft/client/network/ClientCommonNetworkHandler -> net/minecraft/client/multiplayer/ClientCommonPacketListenerImpl
+#   net/minecraft/client/render/BufferBuilder          -> com/mojang/blaze3d/vertex/BufferBuilder (returns MeshData, not BuiltBuffer)
+# accessible method net/minecraft/client/render/BufferBuilder build ()Lnet/minecraft/client/render/BuiltBuffer;
+# accessible field net/minecraft/client/network/ClientCommonNetworkHandler connection Lnet/minecraft/network/ClientConnection;
+# accessible field net/minecraft/network/ClientConnection channel Lio/netty/channel/Channel;

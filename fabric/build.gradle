@@ -28,6 +28,11 @@ configurations {
     }
 }
 
+// TODO[26.2-verify]: For non-obfuscated MC 26.1+, upstream Fabric Loom 1.15+ no longer remaps, so the
+// idiomatic config becomes implementation/compileOnly + plain `jar` (no remapJar). It is UNCONFIRMED
+// whether Architectury Loom 1.17.477 adopted this or still uses modImplementation/remapJar for its
+// cross-platform transform. Left as-is (the working config); flip to implementation/jar if the local
+// build reports modImplementation/remapJar as unknown. See MIGRATION_NOTES.md.
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:$project.fabric_loader_version"
     // Fabric API. This is technically optional, but you probably want it anyway.
