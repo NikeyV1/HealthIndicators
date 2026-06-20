@@ -83,6 +83,8 @@ the three `*.accesswidener` (Yarn entries disabled — see section 7).
 
 **OpSec critical path** (`HealthIndicatorsFabric`) — see section 5.
 
+**All remaining source files** hand-migrated Yarn→Mojmap (best-effort, uncompiled) — see section 6.
+
 ---
 
 ## 5. OpSec netty bypass — validation (task's critical risk point)
@@ -116,16 +118,26 @@ The two-channel design is intact:
 
 ---
 
-## 6. Remaining code: run the IntelliJ migration map, then fix flags
+## 6. Remaining code — now migrated best-effort (verify the flags)
 
-These files still hold **Yarn names** (pure renames — best done by the official Fabric migrate-mappings
-tooling / IntelliJ migration map, exactly as the task prescribes, rather than hand-typed here):
+All source files have now been hand-migrated to Mojmap (best-effort, **uncompiled**). Confidence varies:
 
-`HealthIndicatorsCommon` (rest), `RenderTracker`, `HudRenderer`, `RenderUtils`,
-`DamageDirectionIndicatorRenderer`, `mixin/EntityRendererMixin`, `mixin/EntityDamageMixin`,
-`util/ConfigUtils`, `util/Util`, `util/HeartJumpData`, `config/ModConfig`, `config/Config`,
-`config/EntitiesListGroup`, all `enums/*`, `neoforge/HealthIndicatorsNeoForge`,
-`neoforge/commands/ModCommands`, `fabric/commands/ModCommands`, `fabric/config/ModMenuAPIImpl`.
+- **High confidence** (stable vanilla renames): `HealthIndicatorsCommon`, `RenderTracker`,
+  `HudRenderer`, `RenderUtils`, `DamageDirectionIndicatorRenderer`, `util/ConfigUtils`, `util/Util`,
+  `util/HeartJumpData`, `config/ModConfig`, all `enums/*`, `neoforge/HealthIndicatorsNeoForge`.
+- **Lower confidence — check `TODO[26.2-verify]`**: `mixin/EntityRendererMixin` (the new render-command
+  -queue API — **the single least-reliable file**), `mixin/EntityDamageMixin` (inject descriptor),
+  `RenderUtils` (Blaze3D vertex chain), the `KeyMapping.Category` API, and a few entity methods
+  (`isRegionUnloaded`, `getEyePosition`, `getBbHeight`, `shouldShowName`, `getDisplayObjective`).
+- **Deleted** (dead code; commands were removed per the brief and never re-added):
+  `fabric/commands/ModCommands`, `neoforge/commands/ModCommands`.
+- **Unchanged**: `config/Config` (no MC types), `fabric/config/ModMenuAPIImpl` (ModMenu API only —
+  verify `ConfigScreenFactory` against ModMenu 20.0.0 if it errors), `Renderer.java` (fully commented).
+
+Still run the official **Fabric migrate-mappings tooling / IntelliJ migration map** as a cross-check —
+it will catch any Mojmap name I got wrong, especially in the render mixin.
+
+### Stable Yarn → Mojmap rename reference (high confidence, unchanged since ~1.21)
 
 ### Stable Yarn → Mojmap rename reference (high confidence, unchanged since ~1.21)
 | Yarn | Mojmap |

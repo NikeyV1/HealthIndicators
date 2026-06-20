@@ -1,7 +1,7 @@
 package io.github.adytech99.healthindicators.enums;
 
 import dev.isxander.yacl3.api.NameableEnum;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 public enum HealthDisplayTypeEnum implements NameableEnum {
     HEARTS("Hearts"),
@@ -14,7 +14,7 @@ public enum HealthDisplayTypeEnum implements NameableEnum {
     }
 
     @Override
-    public Text getDisplayName() {
-        return Text.of(displayName);
+    public Component getDisplayName() {
+        return Component.literal(displayName);
     }
 }

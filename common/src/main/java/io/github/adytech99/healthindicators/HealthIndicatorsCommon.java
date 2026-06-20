@@ -5,28 +5,27 @@ import io.github.adytech99.healthindicators.config.Config;
 import io.github.adytech99.healthindicators.config.ModConfig;
 import io.github.adytech99.healthindicators.util.ConfigUtils;
 import io.github.adytech99.healthindicators.util.Util;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class HealthIndicatorsCommon {
     public static final String MOD_ID = "healthindicators";
-    public static MinecraftClient client = MinecraftClient.getInstance();
+    public static Minecraft client = Minecraft.getInstance();
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static final KeyBinding.Category HEALTH_INDICATORS_CATEGORY = KeyBinding.Category.create(Identifier.of(MOD_ID, "main"));
+    // TODO[26.2-verify]: KeyMapping.Category.create(ResourceLocation) is new (1.21.11) API; confirm.
+    public static final KeyMapping.Category HEALTH_INDICATORS_CATEGORY = KeyMapping.Category.create(ResourceLocation.fromNamespaceAndPath(MOD_ID, "main"));
 
-    // Structural networking change (CustomPayload.Id -> CustomPacketPayload.Type). The Identifier.of
-    // call below is left for the IntelliJ migration map to convert to ResourceLocation.fromNamespaceAndPath.
     public static final CustomPacketPayload.Type<PingPayload> HANDSHAKE_CHANNEL =
-            new CustomPacketPayload.Type<>(Identifier.of(MOD_ID, "handshake"));
+            new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(MOD_ID, "handshake"));
 
     private static boolean changed = false;
     private static boolean openConfig = false;
@@ -35,22 +34,23 @@ public final class HealthIndicatorsCommon {
     public static void init() {
         ModConfig.HANDLER.load();
         Config.load();
+        // TODO[26.2-verify]: Architectury ClientGuiEvent.RENDER_HUD callback signature for 26.2.
         ClientGuiEvent.RENDER_HUD.register(HealthIndicatorsCommon::onHudRender);
-        client = MinecraftClient.getInstance();
+        client = Minecraft.getInstance();
         LOGGER.info("Never be heartless!");
     }
 
     public static void tick(){
         if(openConfig){
-            Screen configScreen = ModConfig.createScreen(client.currentScreen);
+            Screen configScreen = ModConfig.createScreen(client.screen);
             client.setScreen(configScreen);
             openConfig = false;
         }
-        if(client == null || client.world == null){
-            client = MinecraftClient.getInstance();
+        if(client == null || client.level == null){
+            client = Minecraft.getInstance();
             return;
         }
-        if(changed && client.world != null && client.world.getTime() % 200 == 0){
+        if(changed && client.level != null && client.level.getGameTime() % 200 == 0){
             ModConfig.HANDLER.save();
             changed = false;
         }
@@ -58,14 +58,14 @@ public final class HealthIndicatorsCommon {
         DamageDirectionIndicatorRenderer.tick();
     }
 
-    public static void onHudRender(DrawContext drawContext1, RenderTickCounter renderTickCounter1) {
-        if(RenderTracker.getTrackedEntity() != null) HudRenderer.onHudRender(drawContext1, renderTickCounter1);
-        if(ModConfig.HANDLER.instance().enable_damage_direction_indicators && client.isInSingleplayer()) DamageDirectionIndicatorRenderer.render(drawContext1, renderTickCounter1.getFixedDeltaTicks());
+    public static void onHudRender(GuiGraphics drawContext1, DeltaTracker deltaTracker1) {
+        if(RenderTracker.getTrackedEntity() != null) HudRenderer.onHudRender(drawContext1, deltaTracker1);
+        if(ModConfig.HANDLER.instance().enable_damage_direction_indicators && client.hasSingleplayerServer()) DamageDirectionIndicatorRenderer.render(drawContext1, deltaTracker1.getGameTimeDeltaPartialTick(false));
     }
 
     public static void openConfig(){
         try {
-            openConfig = client.world != null;
+            openConfig = client.level != null;
         } catch (NullPointerException e) {
             openConfig = false;
         }
@@ -74,20 +74,20 @@ public final class HealthIndicatorsCommon {
     public static void enableHeartsRendering(){
         Config.setHeartsRenderingEnabled(!Config.getHeartsRenderingEnabled());
         if (client != null && client.player != null) {
-            Formatting formatting;
-            if(ModConfig.HANDLER.instance().colored_messages) formatting = Config.getHeartsRenderingEnabled() ? Formatting.GREEN : Formatting.RED;
-            else formatting = Formatting.WHITE;
-            ConfigUtils.sendMessage(client.player, Text.literal((Config.getHeartsRenderingEnabled() ? "Enabled" : "Disabled") + " Health Indicators").formatted(formatting));
+            ChatFormatting formatting;
+            if(ModConfig.HANDLER.instance().colored_messages) formatting = Config.getHeartsRenderingEnabled() ? ChatFormatting.GREEN : ChatFormatting.RED;
+            else formatting = ChatFormatting.WHITE;
+            ConfigUtils.sendMessage(client.player, Component.literal((Config.getHeartsRenderingEnabled() ? "Enabled" : "Disabled") + " Health Indicators").withStyle(formatting));
         }
     }
 
     public static void enableArmorRendering(){
         Config.setArmorRenderingEnabled(!Config.getArmorRenderingEnabled());
         if (client != null && client.player != null) {
-            Formatting formatting;
-            if(ModConfig.HANDLER.instance().colored_messages) formatting = Config.getArmorRenderingEnabled() ? Formatting.GREEN : Formatting.RED;
-            else formatting = Formatting.WHITE;
-            ConfigUtils.sendMessage(client.player, Text.literal((Config.getArmorRenderingEnabled() ? "Enabled" : "Disabled") + " Armor Indicators").formatted(formatting));
+            ChatFormatting formatting;
+            if(ModConfig.HANDLER.instance().colored_messages) formatting = Config.getArmorRenderingEnabled() ? ChatFormatting.GREEN : ChatFormatting.RED;
+            else formatting = ChatFormatting.WHITE;
+            ConfigUtils.sendMessage(client.player, Component.literal((Config.getArmorRenderingEnabled() ? "Enabled" : "Disabled") + " Armor Indicators").withStyle(formatting));
         }
     }
 
@@ -95,7 +95,7 @@ public final class HealthIndicatorsCommon {
         ModConfig.HANDLER.instance().display_offset = Math.clamp(ModConfig.HANDLER.instance().display_offset + ModConfig.HANDLER.instance().offset_step_size, -5.0, 5.0);
         changed = true;
         if (client != null && client.player != null) {
-            ConfigUtils.sendMessage(client.player, Text.literal("Set heart offset to " + Util.truncate(ModConfig.HANDLER.instance().display_offset,2)));
+            ConfigUtils.sendMessage(client.player, Component.literal("Set heart offset to " + Util.truncate(ModConfig.HANDLER.instance().display_offset,2)));
         }
     }
     public static void decreaseOffset(){
@@ -104,20 +104,21 @@ public final class HealthIndicatorsCommon {
                 -5.0, 5.0);
         changed = true;
         if (client != null && client.player != null) {
-            ConfigUtils.sendMessage(client.player, Text.literal("Set heart offset to " + Util.truncate(ModConfig.HANDLER.instance().display_offset,2)));
+            ConfigUtils.sendMessage(client.player, Component.literal("Set heart offset to " + Util.truncate(ModConfig.HANDLER.instance().display_offset,2)));
         }
     }
 
     public static void overrideFilters(){
         Config.setOverrideAllFiltersEnabled(true);
         if (client != null && client.player != null) {
-            ConfigUtils.sendOverlayMessage(client.player, Text.literal( " Config Criteria " + (Config.getOverrideAllFiltersEnabled() ? "Temporarily Overridden" : "Re-implemented")));
+            ConfigUtils.sendOverlayMessage(client.player, Component.literal( " Config Criteria " + (Config.getOverrideAllFiltersEnabled() ? "Temporarily Overridden" : "Re-implemented")));
         }
     }
 
     public static void disableOverrideFilters(){
         Config.setOverrideAllFiltersEnabled(false);
-        client.inGameHud.setOverlayMessage(Text.literal(""), false);
+        // TODO[26.2-verify]: Gui.setOverlayMessage(Component, boolean) name under Mojmap 26.2.
+        client.gui.setOverlayMessage(Component.literal(""), false);
     }
 
     public static void openConfigScreen(){

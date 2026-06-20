@@ -7,25 +7,26 @@ import io.github.adytech99.healthindicators.enums.HeartTypeEnum;
 import io.github.adytech99.healthindicators.RenderTracker;
 import io.github.adytech99.healthindicators.util.HeartJumpData;
 import io.github.adytech99.healthindicators.util.RenderUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.render.command.RenderCommandQueue;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.entity.state.LivingEntityRenderState;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.Component;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.command.OrderedRenderCommandQueue;
+import net.minecraft.client.renderer.command.RenderCommandQueue;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.EntityModel;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.scores.DisplaySlot;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -35,31 +36,40 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static io.github.adytech99.healthindicators.enums.HeartTypeEnum.addHardcoreIcon;
 import static io.github.adytech99.healthindicators.enums.HeartTypeEnum.addStatusIcon;
 
-
+// ============================================================================================
+// TODO[26.2-verify] — HIGHEST RISK FILE. This mixin targets the brand-new 1.21.11 render-command
+// -queue rework. The following are NOT reliably known for Mojmap 26.2 and MUST be verified against
+// the real MC sources / IntelliJ migration map (see MIGRATION_NOTES.md §6):
+//   - OrderedRenderCommandQueue / RenderCommandQueue / CameraRenderState class names + packages
+//   - submitCustom(...) / submitText(...) / getBatchingQueue(int) method names + signatures
+//   - EntityRenderDispatcher field name (Yarn 'dispatcher') + distanceToSqr / camera.rotation()
+//   - shouldShowName (Yarn hasLabel), getBbHeight (Yarn getHeight)
+//   - @Inject method descriptors below (Yarn descriptors; re-derive for non-obfuscated Mojmap)
+//   - Font.DisplayMode (Yarn TextRenderer.TextLayerType), Component.getVisualOrderText()
+// The non-render renames (PoseStack, Mth, Component, ResourceLocation, RenderType, entity packages)
+// are higher confidence.
+// ============================================================================================
 @Mixin(LivingEntityRenderer.class)
 public abstract class EntityRendererMixin<T extends LivingEntity, S extends LivingEntityRenderState, M extends EntityModel<? super S>>
         extends EntityRenderer<T, S>
-        implements FeatureRendererContext<S, M> {
-            
-    @Unique private final MinecraftClient client = MinecraftClient.getInstance();
-    @Unique private static final Identifier ICONS_TEXTURE = Identifier.of("minecraft", "textures/gui/icons.png");
+        implements RenderLayerParent<S, M> {
+
+    @Unique private final Minecraft client = Minecraft.getInstance();
+    @Unique private static final ResourceLocation ICONS_TEXTURE = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/icons.png");
     @Unique private static final java.util.WeakHashMap<LivingEntityRenderState, LivingEntity> ENTITY_MAP = new java.util.WeakHashMap<>();
-    
-    protected EntityRendererMixin(EntityRendererFactory.Context ctx) {
+
+    protected EntityRendererMixin(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
-    @Inject(method = "updateRenderState(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/client/render/entity/state/LivingEntityRenderState;F)V", at = @At("TAIL"), remap = false)
+    @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;F)V", at = @At("TAIL"), remap = false)
     public void updateRenderState(T livingEntity, S livingEntityRenderState, float f, CallbackInfo ci){
-        // Store the entity in a WeakHashMap keyed by the render state
-        // This prevents the health sharing bug where entities of the same type show the same health
-        // Using WeakHashMap ensures render states are garbage collected when no longer needed
+        // Store the entity in a WeakHashMap keyed by the render state to avoid the health-sharing bug.
         ENTITY_MAP.put(livingEntityRenderState, livingEntity);
     }
-    @Inject(method = "render(Lnet/minecraft/client/render/entity/state/LivingEntityRenderState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;Lnet/minecraft/client/render/state/CameraRenderState;)V", at = @At("TAIL"), remap = false)
-    public void render(S livingEntityRenderState, MatrixStack matrixStack, OrderedRenderCommandQueue orderedRenderCommandQueue, CameraRenderState cameraRenderState, CallbackInfo ci) {
-        // Retrieve the entity from the map
+    @Inject(method = "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/command/OrderedRenderCommandQueue;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At("TAIL"), remap = false)
+    public void render(S livingEntityRenderState, PoseStack matrixStack, OrderedRenderCommandQueue orderedRenderCommandQueue, CameraRenderState cameraRenderState, CallbackInfo ci) {
         LivingEntity livingEntity = ENTITY_MAP.get(livingEntityRenderState);
-        
+
         if (livingEntity != null && (RenderTracker.isInUUIDS(livingEntity) || (Config.getOverrideAllFiltersEnabled() && !RenderTracker.isInvalid(livingEntity)))) {
             if(Config.getHeartsRenderingEnabled() || Config.getOverrideAllFiltersEnabled()) {
                 if (ModConfig.HANDLER.instance().indicator_type == HealthDisplayTypeEnum.HEARTS)
@@ -76,21 +86,21 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
         }
     }
     @SuppressWarnings("unchecked")
-    @Unique private void renderHearts(LivingEntity livingEntity, float yaw, float tickDelta, MatrixStack matrixStack, OrderedRenderCommandQueue orderedRenderCommandQueue){
-        double d = this.dispatcher.getSquaredDistanceToCamera(livingEntity);
-        final T entAsT = (T) livingEntity; // retained for hasLabel calls
-        int healthRed = MathHelper.ceil(livingEntity.getHealth());
-        int maxHealth = MathHelper.ceil(livingEntity.getMaxHealth());
-        int healthYellow = MathHelper.ceil(livingEntity.getAbsorptionAmount());
+    @Unique private void renderHearts(LivingEntity livingEntity, float yaw, float tickDelta, PoseStack matrixStack, OrderedRenderCommandQueue orderedRenderCommandQueue){
+        double d = this.entityRenderDispatcher.distanceToSqr(livingEntity);
+        final T entAsT = (T) livingEntity;
+        int healthRed = Mth.ceil(livingEntity.getHealth());
+        int maxHealth = Mth.ceil(livingEntity.getMaxHealth());
+        int healthYellow = Mth.ceil(livingEntity.getAbsorptionAmount());
         if(ModConfig.HANDLER.instance().percentage_based_health) {
-            healthRed = MathHelper.ceil(((float) healthRed /maxHealth) * ModConfig.HANDLER.instance().max_health);
-            maxHealth = MathHelper.ceil(ModConfig.HANDLER.instance().max_health);
-            healthYellow = MathHelper.ceil(livingEntity.getAbsorptionAmount());
+            healthRed = Mth.ceil(((float) healthRed /maxHealth) * ModConfig.HANDLER.instance().max_health);
+            maxHealth = Mth.ceil(ModConfig.HANDLER.instance().max_health);
+            healthYellow = Mth.ceil(livingEntity.getAbsorptionAmount());
         }
-        int heartsRed = MathHelper.ceil(healthRed / 2.0F);
+        int heartsRed = Mth.ceil(healthRed / 2.0F);
         boolean lastRedHalf = (healthRed & 1) == 1;
-        int heartsNormal = MathHelper.ceil(maxHealth / 2.0F);
-        int heartsYellow = MathHelper.ceil(healthYellow / 2.0F);
+        int heartsNormal = Mth.ceil(maxHealth / 2.0F);
+        int heartsYellow = Mth.ceil(healthYellow / 2.0F);
         boolean lastYellowHalf = (healthYellow & 1) == 1;
         int heartsTotal = heartsNormal + heartsYellow;
         int heartsPerRow = ModConfig.HANDLER.instance().icons_per_row;
@@ -99,58 +109,51 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
         float scale = ModConfig.getSize();
         double heartDensity = 50F - (Math.max(4F - Math.ceil((double) heartsTotal / heartsPerRow), -3F) * 5F);
         double h = 0;
-        // Check if entity is obstructed by blocks
         boolean shouldRenderThroughWalls = false;
         for (int isDrawingEmpty = 0; isDrawingEmpty < 2; isDrawingEmpty++) {
-            //   Order 1: Empty hearts (background)
-            //   Order 2: Filled hearts (foreground)
-            RenderCommandQueue targetQueue = shouldRenderThroughWalls ? 
-                orderedRenderCommandQueue.getBatchingQueue(isDrawingEmpty) : 
+            RenderCommandQueue targetQueue = shouldRenderThroughWalls ?
+                orderedRenderCommandQueue.getBatchingQueue(isDrawingEmpty) :
                 orderedRenderCommandQueue;
-            
+
             for (int heart = 0; heart < heartsTotal; heart++) {
                 if (heart % heartsPerRow == 0) {
                     h = heart / heartDensity;
                 }
-                matrixStack.push();
-                matrixStack.translate(0, livingEntity.getHeight() + 0.5f + h, 0);
-                if (livingEntity.hasStatusEffect(StatusEffects.REGENERATION) && ModConfig.HANDLER.instance().show_heart_effects) {
+                matrixStack.pushPose();
+                matrixStack.translate(0, livingEntity.getBbHeight() + 0.5f + h, 0);
+                if (livingEntity.hasEffect(MobEffects.REGENERATION) && ModConfig.HANDLER.instance().show_heart_effects) {
                     if(HeartJumpData.getWhichHeartJumping(livingEntity) == heart){
                         matrixStack.translate(0.0D, 1.15F * scale, 0.0D);
                     }
                 }
-        if ((this.hasLabel(entAsT, d)
-                        || (ModConfig.HANDLER.instance().force_higher_offset_for_players && livingEntity instanceof PlayerEntity && livingEntity != client.player))
+        if ((this.shouldShowName(entAsT, d)
+                        || (ModConfig.HANDLER.instance().force_higher_offset_for_players && livingEntity instanceof Player && livingEntity != client.player))
                         && d <= 4096.0) {
                     matrixStack.translate(0.0D, 9.0F * 1.15F * scale, 0.0D);
-                    if (d < 100.0 && livingEntity instanceof PlayerEntity && livingEntity.getEntityWorld().getScoreboard().getObjectiveForSlot(net.minecraft.scoreboard.ScoreboardDisplaySlot.BELOW_NAME) != null) {
+                    if (d < 100.0 && livingEntity instanceof Player && livingEntity.level().getScoreboard().getDisplayObjective(DisplaySlot.BELOW_NAME) != null) {
                         matrixStack.translate(0.0D, 9.0F * 1.15F * scale, 0.0D);
                     }
                 }
-                matrixStack.multiply(this.dispatcher.camera.getRotation());
+                matrixStack.mulPose(this.entityRenderDispatcher.camera.rotation());
                 matrixStack.scale(-scale, scale, scale);
                 matrixStack.translate(0, ModConfig.getDisplayOffset(), 0);
                 float x = maxX - (heart % heartsPerRow) * 8;
                 if (isDrawingEmpty == 0) {
-                    // Create heart texture identifier
                     String additionalIconEffects = "";
                     HeartTypeEnum type = HeartTypeEnum.EMPTY;
-                    Identifier heartTextureId = ModConfig.HANDLER.instance().use_vanilla_textures ?
-                            Identifier.of("healthindicators", "textures/gui/heart/" + additionalIconEffects + type.icon + ".png") :
-                            Identifier.of("minecraft", "textures/gui/sprites/hud/heart/" + additionalIconEffects + type.icon + ".png");
-                    // Get vertex consumer for this specific texture with appropriate render layer
-                    RenderLayer renderLayer;
+                    ResourceLocation heartTextureId = ModConfig.HANDLER.instance().use_vanilla_textures ?
+                            ResourceLocation.fromNamespaceAndPath("healthindicators", "textures/gui/heart/" + additionalIconEffects + type.icon + ".png") :
+                            ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/sprites/hud/heart/" + additionalIconEffects + type.icon + ".png");
+                    RenderType renderLayer;
                     if (shouldRenderThroughWalls) {
-                        // Use see-through render layer
-                        renderLayer = RenderLayers.textSeeThrough(heartTextureId);
+                        renderLayer = RenderType.textSeeThrough(heartTextureId);
                     } else {
-                        // Use normal text render layer
-                        renderLayer = RenderLayers.text(heartTextureId);
+                        renderLayer = RenderType.text(heartTextureId);
                     }
                     final HeartTypeEnum renderType = type;
                     float opacity = ModConfig.HANDLER.instance().health_bar_opacity / 100.0F;
                         targetQueue.submitCustom(matrixStack, renderLayer, (matricesEntry, vertexConsumer) -> {
-                            Matrix4f m = matricesEntry.getPositionMatrix();
+                            Matrix4f m = matricesEntry.pose();
                             RenderUtils.drawHeart(m, vertexConsumer, x, renderType, livingEntity, opacity, d, shouldRenderThroughWalls);
                         });
                 } else {
@@ -169,57 +172,56 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
                         }
                     }
                     if (type != HeartTypeEnum.EMPTY) {
-                        // Create heart texture identifier with effects
                         String additionalIconEffects = "";
                         if(type != HeartTypeEnum.YELLOW_FULL && type != HeartTypeEnum.YELLOW_HALF && type != HeartTypeEnum.EMPTY && ModConfig.HANDLER.instance().show_heart_effects) {
                             additionalIconEffects = (addStatusIcon(livingEntity) + addHardcoreIcon(livingEntity));
                         }
-                        Identifier heartTextureId = ModConfig.HANDLER.instance().use_vanilla_textures ?
-                                Identifier.of("healthindicators", "textures/gui/heart/" + additionalIconEffects + type.icon + ".png") :
-                                Identifier.of("minecraft", "textures/gui/sprites/hud/heart/" + additionalIconEffects + type.icon + ".png");
-                        RenderLayer renderLayer;
+                        ResourceLocation heartTextureId = ModConfig.HANDLER.instance().use_vanilla_textures ?
+                                ResourceLocation.fromNamespaceAndPath("healthindicators", "textures/gui/heart/" + additionalIconEffects + type.icon + ".png") :
+                                ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/sprites/hud/heart/" + additionalIconEffects + type.icon + ".png");
+                        RenderType renderLayer;
                         if (shouldRenderThroughWalls) {
-                            renderLayer = RenderLayers.textSeeThrough(heartTextureId);
+                            renderLayer = RenderType.textSeeThrough(heartTextureId);
                         } else {
-                            renderLayer = RenderLayers.text(heartTextureId);
+                            renderLayer = RenderType.text(heartTextureId);
                         }
                         final HeartTypeEnum renderType = type;
                         float opacity = ModConfig.HANDLER.instance().health_bar_opacity / 100.0F;
                         targetQueue.submitCustom(matrixStack, renderLayer, (matricesEntry, vertexConsumer) -> {
-                            Matrix4f m = matricesEntry.getPositionMatrix();
+                            Matrix4f m = matricesEntry.pose();
                             RenderUtils.drawHeart(m, vertexConsumer, x, renderType, livingEntity, opacity, d, shouldRenderThroughWalls);
                         });
                     }
                 }
-                matrixStack.pop();
+                matrixStack.popPose();
             }
         }
     }
     @SuppressWarnings("unchecked")
     @Unique
-    private void renderNumber(LivingEntity livingEntity, float yaw, float tickDelta, MatrixStack matrixStack, OrderedRenderCommandQueue orderedRenderCommandQueue){
-        double d = this.dispatcher.getSquaredDistanceToCamera(livingEntity);
+    private void renderNumber(LivingEntity livingEntity, float yaw, float tickDelta, PoseStack matrixStack, OrderedRenderCommandQueue orderedRenderCommandQueue){
+        double d = this.entityRenderDispatcher.distanceToSqr(livingEntity);
         final T entAsT = (T) livingEntity;
         String healthText = RenderUtils.getHealthText(livingEntity);
         boolean shouldRenderThroughWalls = false;
-        matrixStack.push();
+        matrixStack.pushPose();
         float scale = ModConfig.getSize();
-        matrixStack.translate(0, livingEntity.getHeight() + 0.5f, 0);
-    if ((this.hasLabel(entAsT, d)
-                || (ModConfig.HANDLER.instance().force_higher_offset_for_players && livingEntity instanceof PlayerEntity && livingEntity != client.player))
+        matrixStack.translate(0, livingEntity.getBbHeight() + 0.5f, 0);
+    if ((this.shouldShowName(entAsT, d)
+                || (ModConfig.HANDLER.instance().force_higher_offset_for_players && livingEntity instanceof Player && livingEntity != client.player))
                 && d <= 4096.0) {
             matrixStack.translate(0.0D, 9.0F * 1.15F * scale, 0.0D);
-            if (d < 100.0 && livingEntity instanceof PlayerEntity && livingEntity.getEntityWorld().getScoreboard().getObjectiveForSlot(net.minecraft.scoreboard.ScoreboardDisplaySlot.BELOW_NAME) != null) {
+            if (d < 100.0 && livingEntity instanceof Player && livingEntity.level().getScoreboard().getDisplayObjective(DisplaySlot.BELOW_NAME) != null) {
                 matrixStack.translate(0.0D, 9.0F * 1.15F * scale, 0.0D);
             }
         }
-        matrixStack.multiply(this.dispatcher.camera.getRotation());
+        matrixStack.mulPose(this.entityRenderDispatcher.camera.rotation());
         matrixStack.scale(scale, -scale, scale);
         matrixStack.translate(0, ModConfig.getDisplayOffset(), 0);
-        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-        float x = -textRenderer.getWidth(healthText) / 2.0f;
-    TextRenderer.TextLayerType textLayerType = shouldRenderThroughWalls ?
-        TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL;
+        Font textRenderer = Minecraft.getInstance().font;
+        float x = -textRenderer.width(healthText) / 2.0f;
+    Font.DisplayMode textLayerType = shouldRenderThroughWalls ?
+        Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL;
     int backgroundColor = ModConfig.HANDLER.instance().render_number_display_background_color ?
         ModConfig.HANDLER.instance().number_display_background_color.getRGB() : 0;
 
@@ -231,7 +233,7 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
         matrixStack,
         x,
         0.0F,
-        Text.literal(healthText).asOrderedText(),
+        Component.literal(healthText).getVisualOrderText(),
         ModConfig.HANDLER.instance().render_number_display_shadow,
         textLayerType,
         15728880,
@@ -239,72 +241,67 @@ public abstract class EntityRendererMixin<T extends LivingEntity, S extends Livi
         backgroundColor,
         0
     );
-        matrixStack.pop();
+        matrixStack.popPose();
     }
     @SuppressWarnings("unchecked")
-    @Unique private void renderArmorPoints(LivingEntity livingEntity, float yaw, float tickDelta, MatrixStack matrixStack, OrderedRenderCommandQueue orderedRenderCommandQueue){
-        double d = this.dispatcher.getSquaredDistanceToCamera(livingEntity);
+    @Unique private void renderArmorPoints(LivingEntity livingEntity, float yaw, float tickDelta, PoseStack matrixStack, OrderedRenderCommandQueue orderedRenderCommandQueue){
+        double d = this.entityRenderDispatcher.distanceToSqr(livingEntity);
         final T entAsT = (T) livingEntity;
-        int armor = MathHelper.ceil(livingEntity.getArmor());
-        int maxArmor = MathHelper.ceil(livingEntity.getArmor());
+        int armor = Mth.ceil(livingEntity.getArmorValue());
+        int maxArmor = Mth.ceil(livingEntity.getArmorValue());
         if(maxArmor == 0) return;
-        int armorPoints = MathHelper.ceil(armor / 2.0F);
+        int armorPoints = Mth.ceil(armor / 2.0F);
         boolean lastPointHalf = (armor & 1) == 1;
     int pointsTotal = 10;
         int pointsPerRow = ModConfig.HANDLER.instance().icons_per_row;
         int pixelsTotal = Math.min(pointsTotal, pointsPerRow) * 8 + 1;
         float maxX = pixelsTotal / 2.0f;
         float scale = ModConfig.getSize();
-        // Check if entity is obstructed by blocks
         boolean shouldRenderThroughWalls = false;
     double h = 0;
-        
+
         for (int isDrawingEmpty = 0; isDrawingEmpty < 2; isDrawingEmpty++) {
-            // Again, switch to batching queues for see-through mode
-            RenderCommandQueue targetQueue = shouldRenderThroughWalls ? 
-                orderedRenderCommandQueue.getBatchingQueue(isDrawingEmpty + 2) : 
+            RenderCommandQueue targetQueue = shouldRenderThroughWalls ?
+                orderedRenderCommandQueue.getBatchingQueue(isDrawingEmpty + 2) :
                 orderedRenderCommandQueue;
-            
+
             for (int pointCount = 0; pointCount < pointsTotal; pointCount++) {
                 if (pointCount % pointsPerRow == 0) {
                     h = (scale*10)*((pointCount/2 + pointsPerRow - 1) / pointsPerRow);
                 }
-                matrixStack.push();
+                matrixStack.pushPose();
                 int extraHeight = (int) (((livingEntity.getMaxHealth() + livingEntity.getAbsorptionAmount())/2 + pointsPerRow - 1) / pointsPerRow);
-                matrixStack.translate(0, livingEntity.getHeight() + 0.75f + (scale*10)*(extraHeight-1) + h, 0);
-        if ((this.hasLabel(entAsT, d)
-                        || (ModConfig.HANDLER.instance().force_higher_offset_for_players && livingEntity instanceof PlayerEntity && livingEntity != client.player))
+                matrixStack.translate(0, livingEntity.getBbHeight() + 0.75f + (scale*10)*(extraHeight-1) + h, 0);
+        if ((this.shouldShowName(entAsT, d)
+                        || (ModConfig.HANDLER.instance().force_higher_offset_for_players && livingEntity instanceof Player && livingEntity != client.player))
                         && d <= 4096.0) {
                     matrixStack.translate(0.0D, 9.0F * 1.15F * scale, 0.0D);
-                    if (d < 100.0 && livingEntity instanceof PlayerEntity && livingEntity.getEntityWorld().getScoreboard().getObjectiveForSlot(net.minecraft.scoreboard.ScoreboardDisplaySlot.BELOW_NAME) != null) {
+                    if (d < 100.0 && livingEntity instanceof Player && livingEntity.level().getScoreboard().getDisplayObjective(DisplaySlot.BELOW_NAME) != null) {
                         matrixStack.translate(0.0D, 9.0F * 1.15F * scale, 0.0D);
                     }
                 }
-                matrixStack.multiply(this.dispatcher.camera.getRotation());
+                matrixStack.mulPose(this.entityRenderDispatcher.camera.rotation());
                 matrixStack.scale(-scale, scale, scale);
                 matrixStack.translate(0, ModConfig.getDisplayOffset(), 0);
                 float x = maxX - (pointCount % pointsPerRow) * 8;
                 ArmorTypeEnum type = (isDrawingEmpty == 0) ? ArmorTypeEnum.EMPTY : (pointCount < armorPoints ? ((pointCount == armorPoints - 1 && lastPointHalf) ? ArmorTypeEnum.HALF : ArmorTypeEnum.FULL) : null);
                 if (type != null) {
-                    Identifier armorTextureId = type.icon;
+                    ResourceLocation armorTextureId = type.icon;
 
-                    RenderLayer renderLayer;
+                    RenderType renderLayer;
                     if (shouldRenderThroughWalls) {
-                        // Use see-through render layer
-                        //renderLayer = RenderLayer.getTextSeeThrough(armorTextureId);
-                        renderLayer = RenderLayers.textSeeThrough(armorTextureId);
+                        renderLayer = RenderType.textSeeThrough(armorTextureId);
                     } else {
-                        // Use normal text render layer
-                        renderLayer = RenderLayers.text(armorTextureId);
+                        renderLayer = RenderType.text(armorTextureId);
                     }
                     final ArmorTypeEnum renderType = type;
                     float opacity = ModConfig.HANDLER.instance().health_bar_opacity / 100.0F;
                     targetQueue.submitCustom(matrixStack, renderLayer, (matricesEntry, vertexConsumer) -> {
-                        Matrix4f m = matricesEntry.getPositionMatrix();
+                        Matrix4f m = matricesEntry.pose();
                         RenderUtils.drawArmor(m, vertexConsumer, x, renderType, opacity, d, shouldRenderThroughWalls);
                     });
                 }
-                matrixStack.pop();
+                matrixStack.popPose();
             }
         }
     }
