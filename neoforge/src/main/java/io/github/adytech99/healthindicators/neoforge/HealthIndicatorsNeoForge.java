@@ -3,10 +3,10 @@ package io.github.adytech99.healthindicators.neoforge;
 import io.github.adytech99.healthindicators.config.Config;
 import io.github.adytech99.healthindicators.neoforge.commands.ModCommands;
 import io.github.adytech99.healthindicators.config.ModConfig;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.KeyMapping;
+import org.lwjgl.glfw.GLFW;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -29,40 +29,40 @@ import static io.github.adytech99.healthindicators.HealthIndicatorsCommon.HEALTH
 @EventBusSubscriber(value = Dist.CLIENT, modid = HealthIndicatorsCommon.MOD_ID)
 public final class HealthIndicatorsNeoForge {
 
-    public static MinecraftClient client = MinecraftClient.getInstance();
+    public static Minecraft client = Minecraft.getInstance();
 
-    public static final Lazy<KeyBinding> HEARTS_RENDERING_ENABLED = Lazy.of(() -> new KeyBinding(
+    public static final Lazy<KeyMapping> HEARTS_RENDERING_ENABLED = Lazy.of(() -> new KeyMapping(
             "key." + HealthIndicatorsCommon.MOD_ID + ".renderingEnabled",
-            InputUtil.GLFW_KEY_LEFT,
+            GLFW.GLFW_KEY_LEFT,
             HEALTH_INDICATORS_CATEGORY
     ));
 
-    public static final Lazy<KeyBinding> ARMOR_RENDERING_ENABLED = Lazy.of(() -> new KeyBinding(
+    public static final Lazy<KeyMapping> ARMOR_RENDERING_ENABLED = Lazy.of(() -> new KeyMapping(
             "key." + HealthIndicatorsCommon.MOD_ID + ".armorRenderingEnabled",
-            InputUtil.GLFW_KEY_RIGHT_SHIFT,
+            GLFW.GLFW_KEY_RIGHT_SHIFT,
             HEALTH_INDICATORS_CATEGORY
     ));
 
-    public static final Lazy<KeyBinding> OVERRIDE_ALL_FILTERS = Lazy.of(() -> new KeyBinding(
+    public static final Lazy<KeyMapping> OVERRIDE_ALL_FILTERS = Lazy.of(() -> new KeyMapping(
             "key." + HealthIndicatorsCommon.MOD_ID + ".overrideAllFilters",
-            InputUtil.GLFW_KEY_RIGHT,
+            GLFW.GLFW_KEY_RIGHT,
             HEALTH_INDICATORS_CATEGORY
     ));
-    public static final Lazy<KeyBinding> INCREASE_HEART_OFFSET = Lazy.of(() -> new KeyBinding(
+    public static final Lazy<KeyMapping> INCREASE_HEART_OFFSET = Lazy.of(() -> new KeyMapping(
             "key." + HealthIndicatorsCommon.MOD_ID + ".increaseHeartOffset",
-            InputUtil.GLFW_KEY_UP,
+            GLFW.GLFW_KEY_UP,
             HEALTH_INDICATORS_CATEGORY
     ));
 
-    public static final Lazy<KeyBinding> DECREASE_HEART_OFFSET = Lazy.of(() -> new KeyBinding(
+    public static final Lazy<KeyMapping> DECREASE_HEART_OFFSET = Lazy.of(() -> new KeyMapping(
             "key." + HealthIndicatorsCommon.MOD_ID + ".decreaseHeartOffset",
-            InputUtil.GLFW_KEY_DOWN,
+            GLFW.GLFW_KEY_DOWN,
             HEALTH_INDICATORS_CATEGORY
     ));
 
-    public static final Lazy<KeyBinding> OPEN_CONFIG_SCREEN = Lazy.of(() -> new KeyBinding(
+    public static final Lazy<KeyMapping> OPEN_CONFIG_SCREEN = Lazy.of(() -> new KeyMapping(
             "key." + HealthIndicatorsCommon.MOD_ID + ".openModMenuConfig",
-            InputUtil.GLFW_KEY_I,
+            GLFW.GLFW_KEY_I,
             HEALTH_INDICATORS_CATEGORY
     ));
 
@@ -88,29 +88,29 @@ public final class HealthIndicatorsNeoForge {
     public void onClientTick(ClientTickEvent.Post event){
         HealthIndicatorsCommon.tick();
 
-        while (HEARTS_RENDERING_ENABLED.get().wasPressed()) {
+        while (HEARTS_RENDERING_ENABLED.get().consumeClick()) {
             HealthIndicatorsCommon.enableHeartsRendering();
         }
 
-        while (ARMOR_RENDERING_ENABLED.get().wasPressed()) {
+        while (ARMOR_RENDERING_ENABLED.get().consumeClick()) {
             HealthIndicatorsCommon.enableArmorRendering();
         }
 
-        while (INCREASE_HEART_OFFSET.get().wasPressed()) {
+        while (INCREASE_HEART_OFFSET.get().consumeClick()) {
             HealthIndicatorsCommon.increaseOffset();
         }
 
-        while (DECREASE_HEART_OFFSET.get().wasPressed()) {
+        while (DECREASE_HEART_OFFSET.get().consumeClick()) {
             HealthIndicatorsCommon.decreaseOffset();
         }
-        if (OVERRIDE_ALL_FILTERS.get().isPressed()) {
+        if (OVERRIDE_ALL_FILTERS.get().isDown()) {
             HealthIndicatorsCommon.overrideFilters();
         }
         else if(Config.getOverrideAllFiltersEnabled()) {
             HealthIndicatorsCommon.disableOverrideFilters();
         }
 
-        if(OPEN_CONFIG_SCREEN.get().wasPressed()) HealthIndicatorsCommon.openConfigScreen();
+        if(OPEN_CONFIG_SCREEN.get().consumeClick()) HealthIndicatorsCommon.openConfigScreen();
     }
 
     @SubscribeEvent

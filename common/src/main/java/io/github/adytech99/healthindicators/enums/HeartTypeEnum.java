@@ -1,7 +1,7 @@
 package io.github.adytech99.healthindicators.enums;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.effect.MobEffects;
 
 public enum HeartTypeEnum {
     EMPTY("container"),
@@ -17,15 +17,15 @@ public enum HeartTypeEnum {
     }
 
     public static String addStatusIcon(LivingEntity livingEntity){
-        if (livingEntity.hasStatusEffect(StatusEffects.WITHER)) return "withered_";
-        if (livingEntity.hasStatusEffect(StatusEffects.POISON)) return "poisoned_";
-        if (livingEntity.isFrozen()) return "frozen_";
+        if (livingEntity.hasEffect(MobEffects.WITHER)) return "withered_";
+        if (livingEntity.hasEffect(MobEffects.POISON)) return "poisoned_";
+        if (livingEntity.isFullyFrozen()) return "frozen_";
         else return "";
     }
 
 
     public static String addHardcoreIcon(LivingEntity livingEntity){
-        if (livingEntity.getEntityWorld().getLevelProperties().isHardcore()) return "hardcore_";
+        if (livingEntity.level().getLevelData().isHardcore()) return "hardcore_";
         else return "";
     }
 }

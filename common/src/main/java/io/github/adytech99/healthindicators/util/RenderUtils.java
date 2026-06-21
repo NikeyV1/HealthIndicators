@@ -3,8 +3,8 @@ package io.github.adytech99.healthindicators.util;
 import io.github.adytech99.healthindicators.config.ModConfig;
 import io.github.adytech99.healthindicators.enums.ArmorTypeEnum;
 import io.github.adytech99.healthindicators.enums.HeartTypeEnum;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.entity.LivingEntity;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.world.entity.LivingEntity;
 import org.joml.Matrix4f;
 
 public class RenderUtils {
@@ -38,10 +38,10 @@ public class RenderUtils {
             z = (type == HeartTypeEnum.EMPTY) ? -scaledOffset : scaledOffset;
         }
 
-        vertexConsumer.vertex(model, x, 0F - heartSize, z).texture(minU, maxV).light(15728880).color(1.0F, 1.0F, 1.0F, opacity);
-        vertexConsumer.vertex(model, x - heartSize, 0F - heartSize, z).texture(maxU, maxV).light(15728880).color(1.0F, 1.0F, 1.0F, opacity);
-        vertexConsumer.vertex(model, x - heartSize, 0F, z).texture(maxU, minV).light(15728880).color(1.0F, 1.0F, 1.0F, opacity);
-        vertexConsumer.vertex(model, x, 0F, z).texture(minU, minV).light(15728880).color(1.0F, 1.0F, 1.0F, opacity);
+        vertexConsumer.addVertex(model, x, 0F - heartSize, z).setUv(minU, maxV).setLight(15728880).setColor(1.0F, 1.0F, 1.0F, opacity);
+        vertexConsumer.addVertex(model, x - heartSize, 0F - heartSize, z).setUv(maxU, maxV).setLight(15728880).setColor(1.0F, 1.0F, 1.0F, opacity);
+        vertexConsumer.addVertex(model, x - heartSize, 0F, z).setUv(maxU, minV).setLight(15728880).setColor(1.0F, 1.0F, 1.0F, opacity);
+        vertexConsumer.addVertex(model, x, 0F, z).setUv(minU, minV).setLight(15728880).setColor(1.0F, 1.0F, 1.0F, opacity);
     }
 
     public static void drawArmor(Matrix4f model, VertexConsumer vertexConsumer, float x, ArmorTypeEnum type) {
@@ -72,10 +72,10 @@ public class RenderUtils {
             z = (type == ArmorTypeEnum.EMPTY) ? -scaledOffset : scaledOffset;
         }
 
-        vertexConsumer.vertex(model, x, 0F - armorSize, z).texture(minU, maxV).light(15728880).color(1.0F, 1.0F, 1.0F, opacity);
-        vertexConsumer.vertex(model, x - armorSize, 0F - armorSize, z).texture(maxU, maxV).light(15728880).color(1.0F, 1.0F, 1.0F, opacity);
-        vertexConsumer.vertex(model, x - armorSize, 0F, z).texture(maxU, minV).light(15728880).color(1.0F, 1.0F, 1.0F, opacity);
-        vertexConsumer.vertex(model, x, 0F, z).texture(minU, minV).light(15728880).color(1.0F, 1.0F, 1.0F, opacity);
+        vertexConsumer.addVertex(model, x, 0F - armorSize, z).setUv(minU, maxV).setLight(15728880).setColor(1.0F, 1.0F, 1.0F, opacity);
+        vertexConsumer.addVertex(model, x - armorSize, 0F - armorSize, z).setUv(maxU, maxV).setLight(15728880).setColor(1.0F, 1.0F, 1.0F, opacity);
+        vertexConsumer.addVertex(model, x - armorSize, 0F, z).setUv(maxU, minV).setLight(15728880).setColor(1.0F, 1.0F, 1.0F, opacity);
+        vertexConsumer.addVertex(model, x, 0F, z).setUv(minU, minV).setLight(15728880).setColor(1.0F, 1.0F, 1.0F, opacity);
     }
 
     public static String getHealthText(LivingEntity livingEntity) {

@@ -2,29 +2,29 @@ package io.github.adytech99.healthindicators;
 
 import io.github.adytech99.healthindicators.config.Config;
 import io.github.adytech99.healthindicators.config.ModConfig;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.text.Text;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.util.Mth;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RenderTracker {
-    private static final MinecraftClient client = MinecraftClient.getInstance();
+    private static final Minecraft client = Minecraft.getInstance();
     private static final ConcurrentHashMap<UUID, Integer> UUIDS = new ConcurrentHashMap<>();
     public static boolean after_attack = ModConfig.HANDLER.instance().after_attack;
 
@@ -39,37 +39,37 @@ public class RenderTracker {
     }
 
 
-    public static void tick(MinecraftClient client){
-        if(client.player == null || client.world == null) return;
+    public static void tick(Minecraft client){
+        if(client.player == null || client.level == null) return;
         if(Config.getRenderingEnabled()) {
-            for (Entity entity : client.world.getEntities()) {
+            for (Entity entity : client.level.entitiesForRendering()) {
                 if (entity instanceof LivingEntity livingEntity && satisfiesAdvancedCriteria(client.player, livingEntity) && satisfiesList(client.player, livingEntity)) {
                     addToUUIDS(livingEntity);
-                } else removeFromUUIDS(entity.getUuid());
+                } else removeFromUUIDS(entity.getUUID());
             }
         }
-        trimEntities(client.world);
+        trimEntities(client.level);
         if(ModConfig.HANDLER.instance().after_attack != after_attack) {
             UUIDS.clear();
             after_attack = ModConfig.HANDLER.instance().after_attack;
         }
-        if(getTrackedEntity() == null || getTrackedEntity().isDead() || getTrackedEntity().isRemoved()) setTrackedEntity(null);
+        if(getTrackedEntity() == null || getTrackedEntity().isDeadOrDying() || getTrackedEntity().isRemoved()) setTrackedEntity(null);
     }
 
     public static void onDamage(DamageSource damageSource, LivingEntity livingEntity) {
-        if(damageSource.getAttacker() instanceof PlayerEntity){
-            assert client.world != null;
+        if(damageSource.getEntity() instanceof Player){
+            assert client.level != null;
             if(ModConfig.HANDLER.instance().after_attack && livingEntity instanceof LivingEntity && RenderTracker.isEntityTypeAllowed(livingEntity, client.player) && satisfiesList(client.player, livingEntity)) {
                 //setTrackedEntity(livingEntity);
                 if (!addToUUIDS(livingEntity)) {
-                    UUIDS.replace(livingEntity.getUuid(), (ModConfig.HANDLER.instance().time_after_hit * 20));
+                    UUIDS.replace(livingEntity.getUUID(), (ModConfig.HANDLER.instance().time_after_hit * 20));
                 }
             }
         }
     }
 
 
-    public static void trimEntities(ClientWorld world) {
+    public static void trimEntities(ClientLevel world) {
         // Check if there's a need to trim entries
         Iterator<Map.Entry<UUID, Integer>> iterator = UUIDS.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -87,42 +87,42 @@ public class RenderTracker {
 
 
     public static void removeFromUUIDS(Entity entity){
-        UUIDS.remove(entity.getUuid());
+        UUIDS.remove(entity.getUUID());
     }
     public static void removeFromUUIDS(UUID uuid){
         UUIDS.remove(uuid);
     }
 
     public static boolean addToUUIDS(LivingEntity livingEntity){
-        if(!UUIDS.containsKey(livingEntity.getUuid())){
-            UUIDS.put(livingEntity.getUuid(), ModConfig.HANDLER.instance().after_attack ? (ModConfig.HANDLER.instance().time_after_hit * 20) : 2400);
+        if(!UUIDS.containsKey(livingEntity.getUUID())){
+            UUIDS.put(livingEntity.getUUID(), ModConfig.HANDLER.instance().after_attack ? (ModConfig.HANDLER.instance().time_after_hit * 20) : 2400);
             return true;
         }
         else return false;
     }
 
     public static boolean isInUUIDS(LivingEntity livingEntity){
-        return UUIDS.containsKey(livingEntity.getUuid());
+        return UUIDS.containsKey(livingEntity.getUUID());
     }
 
-    public static boolean overridePlayers(ClientPlayerEntity playerEntity, LivingEntity livingEntity){
-        return (ModConfig.HANDLER.instance().override_players && livingEntity instanceof PlayerEntity && livingEntity != client.player)
+    public static boolean overridePlayers(LocalPlayer playerEntity, LivingEntity livingEntity){
+        return (ModConfig.HANDLER.instance().override_players && livingEntity instanceof Player && livingEntity != client.player)
                 || (livingEntity == client.player && ModConfig.HANDLER.instance().self);
     }
 
-    public static boolean isEntityTypeAllowed(LivingEntity livingEntity, PlayerEntity self){
-        if(!ModConfig.HANDLER.instance().passive_mobs && livingEntity instanceof PassiveEntity) return false;
-        if(!ModConfig.HANDLER.instance().hostile_mobs && livingEntity instanceof HostileEntity) return false;
-        if(!ModConfig.HANDLER.instance().players && livingEntity instanceof PlayerEntity) return false;
+    public static boolean isEntityTypeAllowed(LivingEntity livingEntity, Player self){
+        if(!ModConfig.HANDLER.instance().passive_mobs && livingEntity instanceof AgeableMob) return false;
+        if(!ModConfig.HANDLER.instance().hostile_mobs && livingEntity instanceof Monster) return false;
+        if(!ModConfig.HANDLER.instance().players && livingEntity instanceof Player) return false;
         if(!ModConfig.HANDLER.instance().self && livingEntity == self) return false;
         return true;
     }
 
-    public static boolean satisfiesAdvancedCriteria(ClientPlayerEntity player, LivingEntity livingEntity){
+    public static boolean satisfiesAdvancedCriteria(LocalPlayer player, LivingEntity livingEntity){
         if(overridePlayers(player, livingEntity)) return true;
 
         if(!isEntityTypeAllowed(livingEntity, player)) return false; //Entity Types
-        if(ModConfig.HANDLER.instance().after_attack && !UUIDS.containsKey(livingEntity.getUuid())) return false; //Damaged by Player, key should have been added by separate means. Necessary because removal check is done by this method.
+        if(ModConfig.HANDLER.instance().after_attack && !UUIDS.containsKey(livingEntity.getUUID())) return false; //Damaged by Player, key should have been added by separate means. Necessary because removal check is done by this method.
         if(ModConfig.HANDLER.instance().damaged_only && (livingEntity.getHealth() == livingEntity.getMaxHealth() || livingEntity.getHealth() > livingEntity.getMaxHealth()*((float) ModConfig.HANDLER.instance().max_health_percentage / 100)) && livingEntity.getAbsorptionAmount() <= 0) return false; //Damaged by Any Reason
         if(ModConfig.HANDLER.instance().looking_at && !isTargeted(livingEntity)) return false;
         if(ModConfig.HANDLER.instance().within_distance && livingEntity.distanceTo(player) > ModConfig.HANDLER.instance().distance) return false;
@@ -130,10 +130,10 @@ public class RenderTracker {
         return !isInvalid(livingEntity);
     }
 
-    public static boolean satisfiesList(ClientPlayerEntity player, LivingEntity livingEntity){
+    public static boolean satisfiesList(LocalPlayer player, LivingEntity livingEntity){
         if(!ModConfig.HANDLER.instance().blacklistOrWhitelist){
             if(ModConfig.HANDLER.instance().list.isEmpty()) return true;
-            if(ModConfig.HANDLER.instance().list.contains("minecraft:player") && livingEntity instanceof PlayerEntity) return true;
+            if(ModConfig.HANDLER.instance().list.contains("minecraft:player") && livingEntity instanceof Player) return true;
         }
 
         String[] blacklist1 = new String[ModConfig.HANDLER.instance().list.size()];
@@ -142,32 +142,32 @@ public class RenderTracker {
         }
 
         if(ModConfig.HANDLER.instance().blacklistOrWhitelist) return Arrays.stream(blacklist1).noneMatch(s -> {
-            if(livingEntity instanceof PlayerEntity) return Text.of(s).equals(Objects.requireNonNull(livingEntity.getName()));
-            else return s.equals(EntityType.getId(livingEntity.getType()).toString());
+            if(livingEntity instanceof Player) return Component.literal(s).equals(Objects.requireNonNull(livingEntity.getName()));
+            else return s.equals(EntityType.getKey(livingEntity.getType()).toString());
         });
         else return Arrays.stream(blacklist1).anyMatch(s -> {
-            if(livingEntity instanceof PlayerEntity) return Text.of(s).equals(Objects.requireNonNull(livingEntity.getName()));
-            else return s.equals(EntityType.getId(livingEntity.getType()).toString());
+            if(livingEntity instanceof Player) return Component.literal(s).equals(Objects.requireNonNull(livingEntity.getName()));
+            else return s.equals(EntityType.getKey(livingEntity.getType()).toString());
         });
     }
 
     public static boolean isTargeted(LivingEntity livingEntity){
         Entity camera = client.getCameraEntity();
         double d = ModConfig.HANDLER.instance().reach;
-        double e = MathHelper.square(d);
-        Vec3d vec3d = camera.getCameraPosVec(0);
-        HitResult hitResult = camera.raycast(d, 0, false);
-        double f = hitResult.getPos().squaredDistanceTo(vec3d);
+        double e = Mth.square(d);
+        Vec3 vec3d = camera.getEyePosition(0);
+        HitResult hitResult = camera.pick(d, 0, false);
+        double f = hitResult.getLocation().distanceToSqr(vec3d);
         if (hitResult.getType() != HitResult.Type.MISS) {
             e = f;
             d = Math.sqrt(e);
         }
-        Vec3d vec3d2 = camera.getRotationVec(0);
-        Vec3d vec3d3 = vec3d.add(vec3d2.x * d, vec3d2.y * d, vec3d2.z * d);
+        Vec3 vec3d2 = camera.getViewVector(0);
+        Vec3 vec3d3 = vec3d.add(vec3d2.x * d, vec3d2.y * d, vec3d2.z * d);
         float g = 1.0f;
-        Box box = camera.getBoundingBox().stretch(vec3d2.multiply(d)).expand(1.0, 1.0, 1.0);
+        AABB box = camera.getBoundingBox().expandTowards(vec3d2.scale(d)).inflate(1.0, 1.0, 1.0);
         assert client.getCameraEntity() != null;
-        EntityHitResult entityHitResult = ProjectileUtil.raycast(client.getCameraEntity(), vec3d, vec3d3, box, entity -> !entity.isSpectator() && entity.canHit(), e);
+        EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(client.getCameraEntity(), vec3d, vec3d3, box, entity -> !entity.isSpectator() && entity.isPickable(), e);
 
         if (entityHitResult != null && entityHitResult.getEntity() instanceof LivingEntity livingEntity1){
             return livingEntity1 == livingEntity;
@@ -176,26 +176,24 @@ public class RenderTracker {
     }
 
     public static boolean isOkayToRenderThroughWalls(LivingEntity livingEntity){
-        return isTargeted(livingEntity) && !livingEntity.isPlayer();
+        return isTargeted(livingEntity) && !(livingEntity instanceof Player);
     }
 
     public static boolean isInvalid(Entity entity){
         return (entity == null
                 || !entity.isAlive()
-                || !entity.isLiving()
-                || entity.isRegionUnloaded()
                 || !(entity instanceof LivingEntity)
+                || entity.touchingUnloadedChunk()
                 || client.player == null
                 || client.player.getVehicle() == entity
                 || (!ServerPermissions.allowsInvisiblePlayers() && entity.isInvisibleTo(client.player)));
     }
-    private static Entity getEntityFromUUID(UUID uuid, ClientWorld world) {
-        for (Entity entity : world.getEntities()) {
-            if (entity.getUuid().equals(uuid)) {
+    private static Entity getEntityFromUUID(UUID uuid, ClientLevel world) {
+        for (Entity entity : world.entitiesForRendering()) {
+            if (entity.getUUID().equals(uuid)) {
                 return entity;
             }
         }
         return null;
     }
 }
-

@@ -2,29 +2,29 @@ package io.github.adytech99.healthindicators.util;
 
 import io.github.adytech99.healthindicators.enums.MessageTypeEnum;
 import io.github.adytech99.healthindicators.config.ModConfig;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 
 public class ConfigUtils {
-    public static void sendMessage(ClientPlayerEntity player, Text text) {
+    public static void sendMessage(LocalPlayer player, Component text) {
         if (isSendMessage()) {
             boolean overlay = ModConfig.HANDLER.instance().message_type == MessageTypeEnum.ACTIONBAR;
-            player.sendMessage(text, overlay);
+            if (overlay) player.sendOverlayMessage(text);
+            else player.sendSystemMessage(text);
         }
     }
 
-    public static void sendMessage(ServerPlayerEntity player, Text text) {
+    public static void sendMessage(ServerPlayer player, Component text) {
         if (isSendMessage()) {
             boolean overlay = ModConfig.HANDLER.instance().message_type == MessageTypeEnum.ACTIONBAR;
-            player.sendMessage(text, overlay);
+            player.sendSystemMessage(text, overlay);
         }
     }
 
-    public static void sendOverlayMessage(ClientPlayerEntity player, Text text) {
+    public static void sendOverlayMessage(LocalPlayer player, Component text) {
         if (isSendMessage()) {
-            boolean overlay = ModConfig.HANDLER.instance().message_type == MessageTypeEnum.ACTIONBAR;
-            player.sendMessage(text, true);
+            player.sendOverlayMessage(text);
         }
     }
 

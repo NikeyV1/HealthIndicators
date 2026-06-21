@@ -1,15 +1,15 @@
 package io.github.adytech99.healthindicators;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.adytech99.healthindicators.config.ModConfig;
 import io.github.adytech99.healthindicators.util.RenderUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.*;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.awt.*;
 
@@ -18,7 +18,7 @@ public class HudRenderer {
 
     //public static DrawContext drawContext;
     //public static RenderTickCounter renderTickCounter;
-    private static final Random random = Random.create();
+    private static final RandomSource random = RandomSource.create();
 
     /*public static void onHudRender(LivingEntity livingEntity, double squaredDistanceToCamera, boolean hasLabel, Quaternionf rotation) {
         Tessellator tessellator = Tessellator.getInstance();
@@ -116,7 +116,7 @@ public class HudRenderer {
     }*/
 
 
-    public static void onHudRender(DrawContext drawContext, RenderTickCounter renderTickCounter){
+    public static void onHudRender(GuiGraphicsExtractor drawContext, DeltaTracker renderTickCounter){
         drawNumberHealthGUIIndicator(RenderTracker.getTrackedEntity(), ModConfig.HANDLER.instance().number_color, 20, 20, ModConfig.HANDLER.instance().render_number_display_shadow, drawContext);
     }
 
@@ -172,25 +172,26 @@ public class HudRenderer {
 
     }*/
 
-    private static void drawHeart(DrawContext context, HudHeartType type, int x, int y, boolean hardcore, boolean blinking, boolean half) {
+    private static void drawHeart(GuiGraphicsExtractor context, HudHeartType type, int x, int y, boolean hardcore, boolean blinking, boolean half) {
         //RenderSystem.enableBlend();
 //        context.drawGuiTexture(type.getTexture(hardcore, half, blinking), 50, 50, 9, 9);
         //RenderSystem.disableBlend();
     }
 
-    public static void drawNumberHealthGUIIndicator(LivingEntity livingEntity, Color textColor, int x, int y, boolean shadow, DrawContext drawContext){
-        String name = String.valueOf(livingEntity.getCustomName() != null ? livingEntity.getCustomName().getLiteralString() : livingEntity.getDisplayName().getString());
-        drawContext.drawText(MinecraftClient.getInstance().textRenderer, name, x, y, textColor.getRGB(), shadow);
-        drawContext.drawText(MinecraftClient.getInstance().textRenderer, RenderUtils.getHealthText(livingEntity), x, y+10, textColor.getRGB(), shadow);
+    public static void drawNumberHealthGUIIndicator(LivingEntity livingEntity, Color textColor, int x, int y, boolean shadow, GuiGraphicsExtractor drawContext){
+        String name = String.valueOf(livingEntity.getCustomName() != null ? livingEntity.getCustomName().getString() : livingEntity.getDisplayName().getString());
+        Font font = Minecraft.getInstance().font;
+        drawContext.text(font, name, x, y, textColor.getRGB(), shadow);
+        drawContext.text(font, RenderUtils.getHealthText(livingEntity), x, y+10, textColor.getRGB(), shadow);
     }
 
     enum HudHeartType {
-        CONTAINER(Identifier.ofVanilla("hud/heart/container"), Identifier.ofVanilla("hud/heart/container_blinking"), Identifier.ofVanilla("hud/heart/container"), Identifier.ofVanilla("hud/heart/container_blinking"), Identifier.ofVanilla("hud/heart/container_hardcore"), Identifier.ofVanilla("hud/heart/container_hardcore_blinking"), Identifier.ofVanilla("hud/heart/container_hardcore"), Identifier.ofVanilla("hud/heart/container_hardcore_blinking")),
-        NORMAL(Identifier.ofVanilla("hud/heart/full"), Identifier.ofVanilla("hud/heart/full_blinking"), Identifier.ofVanilla("hud/heart/half"), Identifier.ofVanilla("hud/heart/half_blinking"), Identifier.ofVanilla("hud/heart/hardcore_full"), Identifier.ofVanilla("hud/heart/hardcore_full_blinking"), Identifier.ofVanilla("hud/heart/hardcore_half"), Identifier.ofVanilla("hud/heart/hardcore_half_blinking")),
-        POISONED(Identifier.ofVanilla("hud/heart/poisoned_full"), Identifier.ofVanilla("hud/heart/poisoned_full_blinking"), Identifier.ofVanilla("hud/heart/poisoned_half"), Identifier.ofVanilla("hud/heart/poisoned_half_blinking"), Identifier.ofVanilla("hud/heart/poisoned_hardcore_full"), Identifier.ofVanilla("hud/heart/poisoned_hardcore_full_blinking"), Identifier.ofVanilla("hud/heart/poisoned_hardcore_half"), Identifier.ofVanilla("hud/heart/poisoned_hardcore_half_blinking")),
-        WITHERED(Identifier.ofVanilla("hud/heart/withered_full"), Identifier.ofVanilla("hud/heart/withered_full_blinking"), Identifier.ofVanilla("hud/heart/withered_half"), Identifier.ofVanilla("hud/heart/withered_half_blinking"), Identifier.ofVanilla("hud/heart/withered_hardcore_full"), Identifier.ofVanilla("hud/heart/withered_hardcore_full_blinking"), Identifier.ofVanilla("hud/heart/withered_hardcore_half"), Identifier.ofVanilla("hud/heart/withered_hardcore_half_blinking")),
-        ABSORBING(Identifier.ofVanilla("hud/heart/absorbing_full"), Identifier.ofVanilla("hud/heart/absorbing_full_blinking"), Identifier.ofVanilla("hud/heart/absorbing_half"), Identifier.ofVanilla("hud/heart/absorbing_half_blinking"), Identifier.ofVanilla("hud/heart/absorbing_hardcore_full"), Identifier.ofVanilla("hud/heart/absorbing_hardcore_full_blinking"), Identifier.ofVanilla("hud/heart/absorbing_hardcore_half"), Identifier.ofVanilla("hud/heart/absorbing_hardcore_half_blinking")),
-        FROZEN(Identifier.ofVanilla("hud/heart/frozen_full"), Identifier.ofVanilla("hud/heart/frozen_full_blinking"), Identifier.ofVanilla("hud/heart/frozen_half"), Identifier.ofVanilla("hud/heart/frozen_half_blinking"), Identifier.ofVanilla("hud/heart/frozen_hardcore_full"), Identifier.ofVanilla("hud/heart/frozen_hardcore_full_blinking"), Identifier.ofVanilla("hud/heart/frozen_hardcore_half"), Identifier.ofVanilla("hud/heart/frozen_hardcore_half_blinking"));
+        CONTAINER(Identifier.withDefaultNamespace("hud/heart/container"), Identifier.withDefaultNamespace("hud/heart/container_blinking"), Identifier.withDefaultNamespace("hud/heart/container"), Identifier.withDefaultNamespace("hud/heart/container_blinking"), Identifier.withDefaultNamespace("hud/heart/container_hardcore"), Identifier.withDefaultNamespace("hud/heart/container_hardcore_blinking"), Identifier.withDefaultNamespace("hud/heart/container_hardcore"), Identifier.withDefaultNamespace("hud/heart/container_hardcore_blinking")),
+        NORMAL(Identifier.withDefaultNamespace("hud/heart/full"), Identifier.withDefaultNamespace("hud/heart/full_blinking"), Identifier.withDefaultNamespace("hud/heart/half"), Identifier.withDefaultNamespace("hud/heart/half_blinking"), Identifier.withDefaultNamespace("hud/heart/hardcore_full"), Identifier.withDefaultNamespace("hud/heart/hardcore_full_blinking"), Identifier.withDefaultNamespace("hud/heart/hardcore_half"), Identifier.withDefaultNamespace("hud/heart/hardcore_half_blinking")),
+        POISONED(Identifier.withDefaultNamespace("hud/heart/poisoned_full"), Identifier.withDefaultNamespace("hud/heart/poisoned_full_blinking"), Identifier.withDefaultNamespace("hud/heart/poisoned_half"), Identifier.withDefaultNamespace("hud/heart/poisoned_half_blinking"), Identifier.withDefaultNamespace("hud/heart/poisoned_hardcore_full"), Identifier.withDefaultNamespace("hud/heart/poisoned_hardcore_full_blinking"), Identifier.withDefaultNamespace("hud/heart/poisoned_hardcore_half"), Identifier.withDefaultNamespace("hud/heart/poisoned_hardcore_half_blinking")),
+        WITHERED(Identifier.withDefaultNamespace("hud/heart/withered_full"), Identifier.withDefaultNamespace("hud/heart/withered_full_blinking"), Identifier.withDefaultNamespace("hud/heart/withered_half"), Identifier.withDefaultNamespace("hud/heart/withered_half_blinking"), Identifier.withDefaultNamespace("hud/heart/withered_hardcore_full"), Identifier.withDefaultNamespace("hud/heart/withered_hardcore_full_blinking"), Identifier.withDefaultNamespace("hud/heart/withered_hardcore_half"), Identifier.withDefaultNamespace("hud/heart/withered_hardcore_half_blinking")),
+        ABSORBING(Identifier.withDefaultNamespace("hud/heart/absorbing_full"), Identifier.withDefaultNamespace("hud/heart/absorbing_full_blinking"), Identifier.withDefaultNamespace("hud/heart/absorbing_half"), Identifier.withDefaultNamespace("hud/heart/absorbing_half_blinking"), Identifier.withDefaultNamespace("hud/heart/absorbing_hardcore_full"), Identifier.withDefaultNamespace("hud/heart/absorbing_hardcore_full_blinking"), Identifier.withDefaultNamespace("hud/heart/absorbing_hardcore_half"), Identifier.withDefaultNamespace("hud/heart/absorbing_hardcore_half_blinking")),
+        FROZEN(Identifier.withDefaultNamespace("hud/heart/frozen_full"), Identifier.withDefaultNamespace("hud/heart/frozen_full_blinking"), Identifier.withDefaultNamespace("hud/heart/frozen_half"), Identifier.withDefaultNamespace("hud/heart/frozen_half_blinking"), Identifier.withDefaultNamespace("hud/heart/frozen_hardcore_full"), Identifier.withDefaultNamespace("hud/heart/frozen_hardcore_full_blinking"), Identifier.withDefaultNamespace("hud/heart/frozen_hardcore_half"), Identifier.withDefaultNamespace("hud/heart/frozen_hardcore_half_blinking"));
 
         private final Identifier fullTexture;
         private final Identifier fullBlinkingTexture;
@@ -228,11 +229,11 @@ public class HudRenderer {
 
         static HudHeartType fromEntityState(LivingEntity livingEntity) {
             HudHeartType heartType;
-            if (livingEntity.hasStatusEffect(StatusEffects.POISON)) {
+            if (livingEntity.hasEffect(MobEffects.POISON)) {
                 heartType = POISONED;
-            } else if (livingEntity.hasStatusEffect(StatusEffects.WITHER)) {
+            } else if (livingEntity.hasEffect(MobEffects.WITHER)) {
                 heartType = WITHERED;
-            } else if (livingEntity.isFrozen()) {
+            } else if (livingEntity.isFullyFrozen()) {
                 heartType = FROZEN;
             } else {
                 heartType = NORMAL;

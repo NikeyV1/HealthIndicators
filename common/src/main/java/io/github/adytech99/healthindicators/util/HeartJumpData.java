@@ -1,25 +1,25 @@
 package io.github.adytech99.healthindicators.util;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 
 public class HeartJumpData {
-    private static final MinecraftClient client = MinecraftClient.getInstance();
+    private static final Minecraft client = Minecraft.getInstance();
 
     private static boolean isHeartJumping = false;
     private static int whichHeartJumping = -1;
 
     public static int getWhichHeartJumping(LivingEntity livingEntity) {
-        return (int) (livingEntity.age % livingEntity.getMaxHealth());
+        return (int) (livingEntity.tickCount % livingEntity.getMaxHealth());
     }
 
     public static boolean isHeartJumping() {
         return isHeartJumping;
     }
 
-    public static void tick(MinecraftClient client){
-        PlayerEntity player = client.player;
+    public static void tick(Minecraft client){
+        Player player = client.player;
         if(player == null) return;
         if(whichHeartJumping != -1){
             whichHeartJumping++;
@@ -28,7 +28,7 @@ public class HeartJumpData {
                 whichHeartJumping = -1;
                 isHeartJumping = false;
             }
-        } else if (player.age % 16 == 0) {
+        } else if (player.tickCount % 16 == 0) {
             whichHeartJumping = 1;
             isHeartJumping = true;
         }

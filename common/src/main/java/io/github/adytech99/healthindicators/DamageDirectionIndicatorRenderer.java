@@ -1,16 +1,16 @@
 package io.github.adytech99.healthindicators;
 
 import io.github.adytech99.healthindicators.config.ModConfig;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 
 import java.awt.*;
 
 public class DamageDirectionIndicatorRenderer {
-    private static PlayerEntity player = HealthIndicatorsCommon.client.player;
+    private static Player player = HealthIndicatorsCommon.client.player;
     private static int timeSinceLastDamage = Integer.MAX_VALUE;
     private static LivingEntity attacker;
 
@@ -22,30 +22,30 @@ public class DamageDirectionIndicatorRenderer {
     public static void tick(){
         player = HealthIndicatorsCommon.client.player;
         if(timeSinceLastDamage != Integer.MAX_VALUE) timeSinceLastDamage++;
-        if (attacker == null || attacker.isDead() || attacker.isRemoved()){
+        if (attacker == null || attacker.isDeadOrDying() || attacker.isRemoved()){
             timeSinceLastDamage = Integer.MAX_VALUE;
             attacker = null;
         }
         if(timeSinceLastDamage == Integer.MAX_VALUE) attacker = null;
     }
 
-    public static void render(DrawContext drawContext, float tickDelta) {
+    public static void render(GuiGraphicsExtractor drawContext, float tickDelta) {
         if (player == null) return;
         if (timeSinceLastDamage <= ModConfig.HANDLER.instance().damage_direction_indicators_visibility_time * 20 && attacker != null) {
             // Get positions and calculate direction
-            Vec3d playerPos = player.getEntityPos();
-            Vec3d attackerPos = attacker.getEntityPos();
+            Vec3 playerPos = player.position();
+            Vec3 attackerPos = attacker.position();
             double deltaX = attackerPos.x - playerPos.x;
             double deltaZ = attackerPos.z - playerPos.z;
 
             // Calculate yaw to attacker and delta from player's current view
             float yawToAttacker = (float) Math.toDegrees(Math.atan2(deltaZ, deltaX)) - 90.0f;
-            yawToAttacker = MathHelper.wrapDegrees(yawToAttacker);
-            float deltaYaw = MathHelper.wrapDegrees(yawToAttacker - player.getYaw());
+            yawToAttacker = Mth.wrapDegrees(yawToAttacker);
+            float deltaYaw = Mth.wrapDegrees(yawToAttacker - player.getYRot());
 
             // Get screen center and setup parameters
-            int centerX = drawContext.getScaledWindowWidth() / 2;
-            int centerY = drawContext.getScaledWindowHeight() / 2;
+            int centerX = drawContext.guiWidth() / 2;
+            int centerY = drawContext.guiHeight() / 2;
             float angle = (float) Math.toRadians(deltaYaw);
 
             // Calculate fade-out alpha (0-255)
@@ -66,7 +66,7 @@ public class DamageDirectionIndicatorRenderer {
         }
     }
 
-    private static void drawArcIndicator(DrawContext context, int centerX, int centerY, float directionAngle, float scale, Color color, int alpha) {
+    private static void drawArcIndicator(GuiGraphicsExtractor context, int centerX, int centerY, float directionAngle, float scale, Color color, int alpha) {
         // Parameters for the curved arc indicator
         // radians
         float radius = 28.0f * scale; // Distance from center
@@ -91,16 +91,16 @@ public class DamageDirectionIndicatorRenderer {
             float angle2 = directionAngle - (float)Math.toRadians(arcSpan / 2.0f) + (float)Math.toRadians(arcSpan * t2);
 
             // Inner arc points
-            float x1Inner = centerX + radius * MathHelper.sin(angle1);
-            float y1Inner = centerY - radius * MathHelper.cos(angle1);
-            float x2Inner = centerX + radius * MathHelper.sin(angle2);
-            float y2Inner = centerY - radius * MathHelper.cos(angle2);
+            float x1Inner = centerX + radius * Mth.sin(angle1);
+            float y1Inner = centerY - radius * Mth.cos(angle1);
+            float x2Inner = centerX + radius * Mth.sin(angle2);
+            float y2Inner = centerY - radius * Mth.cos(angle2);
 
             // Outer arc points
-            float x1Outer = centerX + (radius + thickness) * MathHelper.sin(angle1);
-            float y1Outer = centerY - (radius + thickness) * MathHelper.cos(angle1);
-            float x2Outer = centerX + (radius + thickness) * MathHelper.sin(angle2);
-            float y2Outer = centerY - (radius + thickness) * MathHelper.cos(angle2);
+            float x1Outer = centerX + (radius + thickness) * Mth.sin(angle1);
+            float y1Outer = centerY - (radius + thickness) * Mth.cos(angle1);
+            float x2Outer = centerX + (radius + thickness) * Mth.sin(angle2);
+            float y2Outer = centerY - (radius + thickness) * Mth.cos(angle2);
 
             // Draw quad for this segment
             drawQuad(context, x1Inner, y1Inner, x2Inner, y2Inner, x2Outer, y2Outer, x1Outer, y1Outer, mainColor);
@@ -114,15 +114,15 @@ public class DamageDirectionIndicatorRenderer {
             float angle1 = directionAngle - (float)Math.toRadians(arcSpan / 2.0f) + (float)Math.toRadians(arcSpan * t1);
             float angle2 = directionAngle - (float)Math.toRadians(arcSpan / 2.0f) + (float)Math.toRadians(arcSpan * t2);
 
-            float x1 = centerX + (radius + thickness) * MathHelper.sin(angle1);
-            float y1 = centerY - (radius + thickness) * MathHelper.cos(angle1);
-            float x2 = centerX + (radius + thickness) * MathHelper.sin(angle2);
-            float y2 = centerY - (radius + thickness) * MathHelper.cos(angle2);
+            float x1 = centerX + (radius + thickness) * Mth.sin(angle1);
+            float y1 = centerY - (radius + thickness) * Mth.cos(angle1);
+            float x2 = centerX + (radius + thickness) * Mth.sin(angle2);
+            float y2 = centerY - (radius + thickness) * Mth.cos(angle2);
 
-            float x1Outer = centerX + (radius + thickness + 1.0f * scale) * MathHelper.sin(angle1);
-            float y1Outer = centerY - (radius + thickness + 1.0f * scale) * MathHelper.cos(angle1);
-            float x2Outer = centerX + (radius + thickness + 1.0f * scale) * MathHelper.sin(angle2);
-            float y2Outer = centerY - (radius + thickness + 1.0f * scale) * MathHelper.cos(angle2);
+            float x1Outer = centerX + (radius + thickness + 1.0f * scale) * Mth.sin(angle1);
+            float y1Outer = centerY - (radius + thickness + 1.0f * scale) * Mth.cos(angle1);
+            float x2Outer = centerX + (radius + thickness + 1.0f * scale) * Mth.sin(angle2);
+            float y2Outer = centerY - (radius + thickness + 1.0f * scale) * Mth.cos(angle2);
 
             drawQuad(context, x1, y1, x2, y2, x2Outer, y2Outer, x1Outer, y1Outer, darkerColor);
         }
@@ -131,27 +131,27 @@ public class DamageDirectionIndicatorRenderer {
         drawArrowPointer(context, centerX, centerY, directionAngle, radius, scale, color, alpha);
     }
 
-    private static void drawArrowPointer(DrawContext context, int centerX, int centerY, float directionAngle, float radius, float scale, Color color, int alpha) {
+    private static void drawArrowPointer(GuiGraphicsExtractor context, int centerX, int centerY, float directionAngle, float radius, float scale, Color color, int alpha) {
         // Arrow dimensions
         float arrowLength = 6.0f * scale;
         float arrowWidth = 4.5f * scale;
 
         // Position arrow at outer edge of arc
-        float arrowBaseX = centerX + radius * MathHelper.sin(directionAngle);
-        float arrowBaseY = centerY - radius * MathHelper.cos(directionAngle);
+        float arrowBaseX = centerX + radius * Mth.sin(directionAngle);
+        float arrowBaseY = centerY - radius * Mth.cos(directionAngle);
 
         // Calculate arrow tip pointing OUTWARD (away from center)
-        float arrowTipX = centerX + (radius + arrowLength) * MathHelper.sin(directionAngle);
-        float arrowTipY = centerY - (radius + arrowLength) * MathHelper.cos(directionAngle);
+        float arrowTipX = centerX + (radius + arrowLength) * Mth.sin(directionAngle);
+        float arrowTipY = centerY - (radius + arrowLength) * Mth.cos(directionAngle);
 
         // Calculate perpendicular angle for arrow wings
         float perpAngle = directionAngle + (float)Math.PI / 2.0f;
 
         // Arrow wing points
-        float leftWingX = arrowBaseX + arrowWidth * MathHelper.sin(perpAngle);
-        float leftWingY = arrowBaseY - arrowWidth * MathHelper.cos(perpAngle);
-        float rightWingX = arrowBaseX - arrowWidth * MathHelper.sin(perpAngle);
-        float rightWingY = arrowBaseY + arrowWidth * MathHelper.cos(perpAngle);
+        float leftWingX = arrowBaseX + arrowWidth * Mth.sin(perpAngle);
+        float leftWingY = arrowBaseY - arrowWidth * Mth.cos(perpAngle);
+        float rightWingX = arrowBaseX - arrowWidth * Mth.sin(perpAngle);
+        float rightWingY = arrowBaseY + arrowWidth * Mth.cos(perpAngle);
 
         // Create color with alpha
         int arrowColor = (alpha << 24) | (color.getRed() << 16) | (color.getGreen() << 8) | color.getBlue();
@@ -163,7 +163,7 @@ public class DamageDirectionIndicatorRenderer {
         drawTriangle(context, xs, ys, arrowColor);
     }
 
-    private static void drawQuad(DrawContext context, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int color) {
+    private static void drawQuad(GuiGraphicsExtractor context, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int color) {
         // Draw quad as two triangles
         float[] tri1X = {x1, x2, x3};
         float[] tri1Y = {y1, y2, y3};
@@ -201,7 +201,7 @@ public class DamageDirectionIndicatorRenderer {
     }
 
     // Helper: Draw a filled triangle using scanline algorithm
-    private static void drawTriangle(DrawContext context, float[] xs, float[] ys, int color) {
+    private static void drawTriangle(GuiGraphicsExtractor context, float[] xs, float[] ys, int color) {
         float minY = ys[0];
         float midY = ys[1];
         float maxY = ys[2];

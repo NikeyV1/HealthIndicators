@@ -1,6 +1,6 @@
 package io.github.adytech99.healthindicators.enums;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 
 public enum ArmorTypeEnum {
     FULL("armor_full"),
@@ -11,7 +11,7 @@ public enum ArmorTypeEnum {
     public final Identifier vanillaIcon;
 
     ArmorTypeEnum(String armorIcon) {
-        icon = Identifier.of("minecraft", "textures/gui/sprites/hud/" + armorIcon + ".png");
-        vanillaIcon = Identifier.of("healthindicators", "textures/gui/armor/" + armorIcon + ".png");
+        icon = Identifier.fromNamespaceAndPath("minecraft", "textures/gui/sprites/hud/" + armorIcon + ".png");
+        vanillaIcon = Identifier.fromNamespaceAndPath("healthindicators", "textures/gui/armor/" + armorIcon + ".png");
     }
 }
