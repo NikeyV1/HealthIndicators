@@ -1,5 +1,8 @@
-plugins {
-    id 'com.gradleup.shadow'
+apply plugin: "com.gradleup.shadow"
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+    injectAccessWidener(tasks.named('jar'))
 }
 
 architectury {
@@ -7,41 +10,29 @@ architectury {
     fabric()
 }
 
-loom {
-    accessWidenerPath = file("src/main/resources/healthindicators.accesswidener")
-}
-
 configurations {
-    common {
-        canBeResolved = true
-        canBeConsumed = false
-    }
+    common
+    shadowCommon
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentFabric.extendsFrom common
+}
 
-    // Files in this configuration will be bundled into your mod using the Shadow plugin.
-    // Don't use the `shadow` configuration from the plugin itself as it's meant for excluding files.
-    shadowBundle {
-        canBeResolved = true
-        canBeConsumed = false
-    }
+repositories {
+    maven { url "https://maven.terraformersmc.com/releases/" }
+    maven { url "https://api.modrinth.com/maven" }
 }
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:$project.fabric_loader_version"
-    // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:$project.fabric_api_version"
+    api "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
+    api "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
     // Architectury API. This is optional, and you can comment it out if you don't need it.
-    modImplementation "dev.architectury:architectury-fabric:$project.architectury_api_version"
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    api "dev.architectury:architectury-fabric:$rootProject.architectury_api_version"
+    api "com.terraformersmc:modmenu:${project.modmenu}"
+    api "maven.modrinth:yacl:${project.yacl_fabric}"
 
-    modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
-    modApi "com.terraformersmc:modmenu:${project.modmenu}"
-    modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_fabric}"
-
-    common(project(path: ':common', configuration: 'namedElements')) { transitive false }
-    shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
+    common(project(path: ':common')) { transitive false }
+    shadowCommon(project(path: ':common', configuration: 'transformProductionFabric')) { transitive false }
 }
 
 processResources {
@@ -52,11 +43,26 @@ processResources {
     }
 }
 
-shadowJar {
-    configurations = [project.configurations.shadowBundle]
-    archiveClassifier = 'dev-shadow'
+jar {
+    archiveClassifier = "raw"
 }
 
-remapJar {
-    input.set shadowJar.archiveFile
+shadowJar {
+    exclude "architectury.common.json"
+
+    dependsOn jar
+    mainSpec.sourcePaths.clear()
+    from(zipTree(jar.archiveFile))
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier = null
+    zip64 = true
+}
+
+assemble.dependsOn shadowJar
+
+components.java {
+    addVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {}
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
 }
