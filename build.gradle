@@ -4,10 +4,25 @@ plugins {
     id 'dev.architectury.loom-no-remap' version '1.17.483' apply false
     id 'architectury-plugin' version '3.5.169'
     id 'com.gradleup.shadow' version '9.2.2' apply false
+    id 'io.github.pacifistmc.forgix' version '2.0.0-SNAPSHOT.5.1'
 }
 
 architectury {
     minecraft = project.minecraft_version
+}
+
+forgix {
+    destinationDirectory = layout.buildDirectory.dir("merged")
+    archiveClassifier = ""
+    archiveVersion = rootProject.mod_version
+
+    fabric()
+    neoforge()
+}
+
+// Ensure the per-platform jars exist before Forgix scans build/libs to merge them.
+tasks.named("mergeJars") {
+    dependsOn ":fabric:shadowJar", ":neoforge:shadowJar"
 }
 
 allprojects {

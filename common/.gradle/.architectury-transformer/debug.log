@@ -4,10 +4,10 @@
 [Architectury Transformer DEBUG] ============================
 [Architectury Transformer DEBUG] 
 [Architectury Transformer DEBUG] Transforming 4 transformer(s) from /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-dev.jar to /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-transformProductionFabric.jar: 
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformExpectPlatform@54eb146d
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.RemapInjectables@473324ba
-[Architectury Transformer DEBUG]  - AddRefmapName(enabled=dev.architectury.plugin.transformers.AddRefmapName$$Lambda/0x0000000023c41cc0@5df64cd1)
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformPlatformOnly@795998c9
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformExpectPlatform@6ebc9900
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.RemapInjectables@7ee01a52
+[Architectury Transformer DEBUG]  - AddRefmapName(enabled=dev.architectury.plugin.transformers.AddRefmapName$$Lambda/0x0000000019c30a10@5ead39e)
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformPlatformOnly@2e138260
 [Architectury Transformer DEBUG] Transforming from /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-dev.jar to /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-transformProductionFabric.jar with 4 transformer(s) on dev.architectury.transformer.handler.SimpleTransformerHandler
 [Architectury Transformer DEBUG] Found class transformer
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/Util with maxs=true frames=true
@@ -87,7 +87,7 @@
 [Architectury Transformer DEBUG]  - /home/user/HealthIndicators/.gradle/loom-cache/minecraftMaven/net/minecraft/minecraft-merged-fc98c8a68a/26.2/minecraft-merged-fc98c8a68a-26.2.jar
 [Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-kqueue/4.2.15.Final/4245380831515fb4eca18d32477a27fbb8f7b8f4/netty-transport-native-kqueue-4.2.15.Final-osx-x86_64.jar
 [Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-kqueue/4.2.15.Final/8ea0ef3eb716d821332e4b4926825a4b7c1a6d38/netty-transport-native-kqueue-4.2.15.Final-osx-aarch_64.jar
-[Architectury Transformer] Read classpath in 2.114 s
+[Architectury Transformer] Read classpath in 6.847 s
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/mixin/EntityDamageMixin with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/MessageTypeEnum with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/IndicatorLocationEnum with maxs=true frames=true
@@ -107,21 +107,21 @@
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/HealthIndicatorsCommon with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/DamageDirectionIndicatorRenderer with maxs=true frames=true
 [Architectury Transformer DEBUG] Closed File Systems for /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-transformProductionFabric.jar
-[Architectury Transformer] Transformed jar with 4 transformer(s) in 2.298 s
+[Architectury Transformer] Transformed jar with 4 transformer(s) in 7.077 s
 [Architectury Transformer DEBUG] 
 [Architectury Transformer DEBUG] ============================
 [Architectury Transformer DEBUG] Transforming from /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-dev.jar to /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-transformProductionNeoForge.jar
 [Architectury Transformer DEBUG] ============================
 [Architectury Transformer DEBUG] 
 [Architectury Transformer DEBUG] Transforming 5 transformer(s) from /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-dev.jar to /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-transformProductionNeoForge.jar: 
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformExpectPlatform@668071f8
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.RemapInjectables@599ab992
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformPlatformOnly@68f4e82b
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformNeoForgeAnnotations@7aa5d643
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformNeoForgeEnvironment@1fcf675e
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformExpectPlatform@48128cdf
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.RemapInjectables@2c4dafab
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformPlatformOnly@3db871c
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformNeoForgeAnnotations@7ff87687
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformNeoForgeEnvironment@23d079d3
 [Architectury Transformer DEBUG] Transforming from /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-dev.jar to /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-transformProductionNeoForge.jar with 5 transformer(s) on dev.architectury.transformer.handler.SimpleTransformerHandler
 [Architectury Transformer DEBUG] Remapping with 1 mapping provider(s):
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformNeoForgeEnvironment$$Lambda/0x0000000023f3e5f8@75b51e84
+[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformNeoForgeEnvironment$$Lambda/0x000000001a0b0638@106eb3af
 [Architectury Transformer DEBUG] Provided 71 classpath jar(s):
 [Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/dev.architectury/architectury-injectables/1.0.10/62db2a366d662606d1b23ad02ccc3212ed37ec3/architectury-injectables-1.0.10.jar
 [Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/dev.architectury/architectury/21.0.2/cc659830cca66b2911d5c657a50f30dd282fba77/architectury-21.0.2-dev.jar
@@ -194,7 +194,7 @@
 [Architectury Transformer DEBUG]  - /home/user/HealthIndicators/.gradle/loom-cache/minecraftMaven/net/minecraft/minecraft-merged-fc98c8a68a/26.2/minecraft-merged-fc98c8a68a-26.2.jar
 [Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-kqueue/4.2.15.Final/4245380831515fb4eca18d32477a27fbb8f7b8f4/netty-transport-native-kqueue-4.2.15.Final-osx-x86_64.jar
 [Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-kqueue/4.2.15.Final/8ea0ef3eb716d821332e4b4926825a4b7c1a6d38/netty-transport-native-kqueue-4.2.15.Final-osx-aarch_64.jar
-[Architectury Transformer] Read classpath in 2.221 s
+[Architectury Transformer] Read classpath in 2.571 s
 [Architectury Transformer DEBUG] Remapping Classes:
 [Architectury Transformer DEBUG] net/fabricmc/api/EnvType -> net/neoforged/api/distmarker/Dist
 [Architectury Transformer DEBUG] net/fabricmc/api/Environment -> net/neoforged/api/distmarker/OnlyIn
@@ -204,18 +204,18 @@
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/HudRenderer$HudHeartType with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/HudRenderer with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/ServerPermissions with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/ServerPermissionPayload with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/PingPayload with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/DamageDirectionIndicatorRenderer with maxs=true frames=true
+[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/PingPayload with maxs=true frames=true
+[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/ServerPermissionPayload with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/ConfigUtils with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/Util with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/RenderUtils with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/HeartJumpData with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/mixin/EntityRendererMixin with maxs=true frames=true
+[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/RenderUtils with maxs=true frames=true
+[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/Util with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/mixin/EntityDamageMixin with maxs=true frames=true
+[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/mixin/EntityRendererMixin with maxs=true frames=true
+[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/DamageReasonEnum with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/HealthDisplayTypeEnum with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/HeartTypeEnum with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/DamageReasonEnum with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/ArmorTypeEnum with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/MessageTypeEnum with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/IndicatorLocationEnum with maxs=true frames=true
@@ -223,230 +223,4 @@
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/config/ModConfig with maxs=true frames=true
 [Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/config/EntitiesListGroup with maxs=true frames=true
 [Architectury Transformer DEBUG] Closed File Systems for /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-transformProductionNeoForge.jar
-[Architectury Transformer] Transformed jar with 5 transformer(s) in 3.040 s
-[Architectury Transformer DEBUG] 
-[Architectury Transformer DEBUG] ============================
-[Architectury Transformer DEBUG] Transforming from /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-dev.jar to /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-transformProductionFabric.jar
-[Architectury Transformer DEBUG] ============================
-[Architectury Transformer DEBUG] 
-[Architectury Transformer DEBUG] Transforming 4 transformer(s) from /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-dev.jar to /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-transformProductionFabric.jar: 
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformExpectPlatform@1b14cc3
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.RemapInjectables@6074e19
-[Architectury Transformer DEBUG]  - AddRefmapName(enabled=dev.architectury.plugin.transformers.AddRefmapName$$Lambda/0x0000000023c41cc0@5df64cd1)
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformPlatformOnly@e4ff42c
-[Architectury Transformer DEBUG] Transforming from /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-dev.jar to /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-transformProductionFabric.jar with 4 transformer(s) on dev.architectury.transformer.handler.SimpleTransformerHandler
-[Architectury Transformer DEBUG] Found class transformer
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/Util with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/RenderUtils with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/HeartJumpData with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/ConfigUtils with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/mixin/EntityRendererMixin with maxs=true frames=true
-[Architectury Transformer DEBUG] Provided 71 classpath jar(s):
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/dev.architectury/architectury-injectables/1.0.10/62db2a366d662606d1b23ad02ccc3212ed37ec3/architectury-injectables-1.0.10.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/dev.architectury/architectury/21.0.2/cc659830cca66b2911d5c657a50f30dd282fba77/architectury-21.0.2-dev.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/net.fabricmc/fabric-loader/0.19.3/354dfaa02d0552e11867f85dff7cdbfaf813ba3e/fabric-loader-0.19.3.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/26.0.2/c7ce3cdeda3d18909368dfe5977332dfad326c6d/annotations-26.0.2.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/maven.modrinth/yacl/3.9.4+26.2-fabric/330a957129141dfd2213e29bfdb9585715d4af6a/yacl-3.9.4+26.2-fabric.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/9.10.1/ada2141c0cc52ee8f5c48cd5fa4ce0e794f22236/asm-9.10.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/9.10.1/8d49f14d51f632cb1d87c88d1ceaf50db0d8af1b/asm-analysis-9.10.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/9.10.1/4229e4c55fd8e01c23f9fe9884075cc628aacc50/asm-commons-9.10.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/9.10.1/e244332a17564c1d1572449399a842de35881be2/asm-tree-9.10.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-util/9.10.1/7bb9d450e8d4cbf9f9e04096c44bbfe7fba80b15/asm-util-9.10.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.17.3+mixin.0.8.7/41c4a3984a80f4679e759fb9f495587acc5cdac7/sponge-mixin-0.17.3+mixin.0.8.7.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.github.llamalad7/mixinextras-fabric/0.5.4/5e167154bcb9942111313a5e186e16cd7265f858/mixinextras-fabric-0.5.4.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/at.yawk.lz4/lz4-java/1.10.1/f541d7f910fe3d76f38f799c507c48cc81b12ecb/lz4-java-1.10.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.azure/azure-json/1.4.0/fcc1d354dbc3e0300e5276b1bf124d0247799cd8/azure-json-1.4.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.github.oshi/oshi-core/6.9.0/3224870731860cfcd7744581a05b559e94291e7/oshi-core-6.9.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.14.0/efc0e34ede4e3204eaefb84a00e55e8c86634382/gson-2.14.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.3/aeaffd00d57023a2c947393ed251f0354f0985fc/failureaccess-1.0.3.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/33.6.0-jre/c376b13067cc99a5774403530953f7b05a91e218/guava-33.6.0-jre.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.ibm.icu/icu4j/78.3/6a851a53bb1f25689fc418dcc8935b0d93580adf/icu4j-78.3.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.microsoft.azure/msal4j/1.24.1/c233f2d047b9755f7041adf21a858c680e4c9242/msal4j-1.24.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/9.0.75/d61056a234d5e4b272e09d59b0713f80d6c0b6af/authlib-9.0.75.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.mojang/blocklist/1.0.10/5c685c5ffa94c4cd39496c7184c1d122e515ecef/blocklist-1.0.10.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/1.3.10/d15b53a14cf20fdcaa98f731af5dda654452c010/brigadier-1.3.10.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.mojang/datafixerupper/10.0.21/b6b2ae770c02e0c1eb90f9985b151e9085a38d0b/datafixerupper-10.0.21.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.mojang/jtracy/1.0.37/a3fb649b2e2b2288d2978f0b0bc3d83f62809d1e/jtracy-1.0.37.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.mojang/logging/1.7.12/351cea64a5233361327d8d54c44277041beed97f/logging-1.7.12.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.mojang/patchy/2.2.10/da05971b07cbb379d002cf7eaec6a2048211fefc/patchy-2.2.10.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.mojang/text2speech/1.19.12/2e517a75c79d34d32de2b5d68422150836c2133e/text2speech-1.19.12.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.22.0/6b3eb4beb7058c2a638f5f17bcb388649fd339dd/commons-codec-1.22.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.20.0/36f3474daec2849c149e877614e7f979b2082cd2/commons-io-2.20.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-buffer/4.2.15.Final/2beb620803bf871cda2dd5d46b8f831e8015dd34/netty-buffer-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec-base/4.2.15.Final/e97149fdd5fb04858efa90e314651c8d700dc68b/netty-codec-base-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec-compression/4.2.15.Final/89fc4a20b7ae6af974304b1695405e62c4f9b16d/netty-codec-compression-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec-http/4.2.15.Final/e611826aa054371bb9a17f27bdb05755a4cac5f0/netty-codec-http-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-common/4.2.15.Final/7222492c1af9c2d4d78d521eea340a619e242fda/netty-common-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-handler/4.2.15.Final/d5344afd1148e3b9927a74be019605ebb0937a93/netty-handler-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-resolver/4.2.15.Final/b961a16d379b508b473e064ba06842bba280f4e3/netty-resolver-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-classes-epoll/4.2.15.Final/44bafba9c9993800e955b365bba4981326f3f3b1/netty-transport-classes-epoll-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-classes-kqueue/4.2.15.Final/f248656bb907607c5a41c7b61fd918a97db79250/netty-transport-classes-kqueue-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.2.15.Final/cccd31f2c8e966ab1e7a4d2293c8a3965628fe73/netty-transport-native-epoll-4.2.15.Final-linux-aarch_64.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.2.15.Final/ce256127f8ed3f076756f1f4dcb5877d65d1f1c2/netty-transport-native-epoll-4.2.15.Final-linux-x86_64.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-unix-common/4.2.15.Final/efb6943b4de9e0226a5ac35330f232605424af02/netty-transport-native-unix-common-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport/4.2.15.Final/a000c3a6196ee40207b73ac619dcb339409dd62f/netty-transport-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/it.unimi.dsi/fastutil/8.5.18/a6cff377eecc19c2037bf31568a6d7106b50ba1f/fastutil-8.5.18.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna-platform/5.17.0/a4934c44d25a9d8c2ddf4203affd20330cb3426f/jna-platform-5.17.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/5.17.0/33d12735bef894440780fce64f9758d420c7bae2/jna-5.17.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/net.sf.jopt-simple/jopt-simple/5.0.4/4fdac2fbe92dfad86aa6e9301736f6b4342a3f5c/jopt-simple-5.0.4.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.28.0/e482f2c7a88dac3c497e96aa420b6a769f59c8d7/commons-compress-1.28.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.20.0/65897b3e5731220962e659e001904af3c3cbeba9/commons-lang3-3.20.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.26.0/ad52af0ecf054a7e3f275a2e180ee06d9c490951/log4j-api-2.26.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.26.0/d267ca60b27ddb075e0b4e75e7875859717bf85f/log4j-core-2.26.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j2-impl/2.26.0/668c0f0e813d83f00a7182533aa658ec7e7a0a0d/log4j-slf4j2-impl-2.26.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.jcraft/jorbis/0.0.17/8872d22b293e8f5d7d56ff92be966e6dc28ebdc6/jorbis-0.0.17.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.joml/joml/1.10.8/fc0a71dad90a2cf41d82a76156a0e700af8e4f8d/joml-1.10.8.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-freetype/3.4.1/caa75a37e857efc9b0686e434d708d6420c5b6ea/lwjgl-freetype-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.4.1/a782b1ddd175c9107bf300fd92920579ea65e2a4/lwjgl-glfw-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.4.1/16b663092854fc6adfe0a941e61cae2bb2e437b6/lwjgl-jemalloc-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.4.1/8508bd60589de0539aa465b78fcf838efd07ae9a/lwjgl-openal-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.4.1/830412cab823c029cda6b9729f9d2ed36cf79959/lwjgl-opengl-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-shaderc/3.4.1/5c02c88f0d879529014c78463b76f43fdecfd272/lwjgl-shaderc-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-spvc/3.4.1/188553592e97b5ab2dba54a1b403ee80b48dad4c/lwjgl-spvc-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.4.1/f077c3dafc31924fbe8acb0b913f08977ba27f8e/lwjgl-stb-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.4.1/562697d40dbd2ed0424bf24dcf65d51170f81adf/lwjgl-tinyfd-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-vma/3.4.1/2c54ce10154feb1ede4d23c5947438cdbfdcc003/lwjgl-vma-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-vulkan/3.4.1/d0601fdc38890755e5638048c14cc0f7b990964b/lwjgl-vulkan-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.4.1/129e06a04f93992cb2a45172435b21fc4b60dd7d/lwjgl-3.4.1-unsafe.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.17/d9e58ac9c7779ba3bf8142aff6c830617a7fe60f/slf4j-api-2.0.17.jar
-[Architectury Transformer DEBUG]  - /home/user/HealthIndicators/.gradle/loom-cache/minecraftMaven/net/minecraft/minecraft-merged-fc98c8a68a/26.2/minecraft-merged-fc98c8a68a-26.2.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-kqueue/4.2.15.Final/4245380831515fb4eca18d32477a27fbb8f7b8f4/netty-transport-native-kqueue-4.2.15.Final-osx-x86_64.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-kqueue/4.2.15.Final/8ea0ef3eb716d821332e4b4926825a4b7c1a6d38/netty-transport-native-kqueue-4.2.15.Final-osx-aarch_64.jar
-[Architectury Transformer] Read classpath in 2.617 s
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/mixin/EntityDamageMixin with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/MessageTypeEnum with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/IndicatorLocationEnum with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/HeartTypeEnum with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/HealthDisplayTypeEnum with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/DamageReasonEnum with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/ArmorTypeEnum with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/config/ModConfig with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/config/EntitiesListGroup with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/config/Config with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/ServerPermissions with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/ServerPermissionPayload with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/RenderTracker with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/PingPayload with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/HudRenderer with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/HudRenderer$HudHeartType with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/HealthIndicatorsCommon with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/DamageDirectionIndicatorRenderer with maxs=true frames=true
-[Architectury Transformer DEBUG] Closed File Systems for /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-transformProductionFabric.jar
-[Architectury Transformer] Transformed jar with 4 transformer(s) in 2.788 s
-[Architectury Transformer DEBUG] 
-[Architectury Transformer DEBUG] ============================
-[Architectury Transformer DEBUG] Transforming from /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-dev.jar to /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-transformProductionNeoForge.jar
-[Architectury Transformer DEBUG] ============================
-[Architectury Transformer DEBUG] 
-[Architectury Transformer DEBUG] Transforming 5 transformer(s) from /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-dev.jar to /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-transformProductionNeoForge.jar: 
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformExpectPlatform@40d4665d
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.RemapInjectables@7e655009
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformPlatformOnly@6cdfb28c
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformNeoForgeAnnotations@535e0797
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformNeoForgeEnvironment@305b652f
-[Architectury Transformer DEBUG] Transforming from /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-dev.jar to /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-transformProductionNeoForge.jar with 5 transformer(s) on dev.architectury.transformer.handler.SimpleTransformerHandler
-[Architectury Transformer DEBUG] Remapping with 1 mapping provider(s):
-[Architectury Transformer DEBUG]  - dev.architectury.transformer.transformers.TransformNeoForgeEnvironment$$Lambda/0x0000000023f3e5f8@75b51e84
-[Architectury Transformer DEBUG] Provided 71 classpath jar(s):
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/dev.architectury/architectury-injectables/1.0.10/62db2a366d662606d1b23ad02ccc3212ed37ec3/architectury-injectables-1.0.10.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/dev.architectury/architectury/21.0.2/cc659830cca66b2911d5c657a50f30dd282fba77/architectury-21.0.2-dev.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/net.fabricmc/fabric-loader/0.19.3/354dfaa02d0552e11867f85dff7cdbfaf813ba3e/fabric-loader-0.19.3.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/26.0.2/c7ce3cdeda3d18909368dfe5977332dfad326c6d/annotations-26.0.2.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/maven.modrinth/yacl/3.9.4+26.2-fabric/330a957129141dfd2213e29bfdb9585715d4af6a/yacl-3.9.4+26.2-fabric.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/9.10.1/ada2141c0cc52ee8f5c48cd5fa4ce0e794f22236/asm-9.10.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/9.10.1/8d49f14d51f632cb1d87c88d1ceaf50db0d8af1b/asm-analysis-9.10.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/9.10.1/4229e4c55fd8e01c23f9fe9884075cc628aacc50/asm-commons-9.10.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/9.10.1/e244332a17564c1d1572449399a842de35881be2/asm-tree-9.10.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-util/9.10.1/7bb9d450e8d4cbf9f9e04096c44bbfe7fba80b15/asm-util-9.10.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.17.3+mixin.0.8.7/41c4a3984a80f4679e759fb9f495587acc5cdac7/sponge-mixin-0.17.3+mixin.0.8.7.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.github.llamalad7/mixinextras-fabric/0.5.4/5e167154bcb9942111313a5e186e16cd7265f858/mixinextras-fabric-0.5.4.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/at.yawk.lz4/lz4-java/1.10.1/f541d7f910fe3d76f38f799c507c48cc81b12ecb/lz4-java-1.10.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.azure/azure-json/1.4.0/fcc1d354dbc3e0300e5276b1bf124d0247799cd8/azure-json-1.4.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.github.oshi/oshi-core/6.9.0/3224870731860cfcd7744581a05b559e94291e7/oshi-core-6.9.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.14.0/efc0e34ede4e3204eaefb84a00e55e8c86634382/gson-2.14.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.3/aeaffd00d57023a2c947393ed251f0354f0985fc/failureaccess-1.0.3.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/33.6.0-jre/c376b13067cc99a5774403530953f7b05a91e218/guava-33.6.0-jre.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.ibm.icu/icu4j/78.3/6a851a53bb1f25689fc418dcc8935b0d93580adf/icu4j-78.3.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.microsoft.azure/msal4j/1.24.1/c233f2d047b9755f7041adf21a858c680e4c9242/msal4j-1.24.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/9.0.75/d61056a234d5e4b272e09d59b0713f80d6c0b6af/authlib-9.0.75.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.mojang/blocklist/1.0.10/5c685c5ffa94c4cd39496c7184c1d122e515ecef/blocklist-1.0.10.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/1.3.10/d15b53a14cf20fdcaa98f731af5dda654452c010/brigadier-1.3.10.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.mojang/datafixerupper/10.0.21/b6b2ae770c02e0c1eb90f9985b151e9085a38d0b/datafixerupper-10.0.21.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.mojang/jtracy/1.0.37/a3fb649b2e2b2288d2978f0b0bc3d83f62809d1e/jtracy-1.0.37.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.mojang/logging/1.7.12/351cea64a5233361327d8d54c44277041beed97f/logging-1.7.12.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.mojang/patchy/2.2.10/da05971b07cbb379d002cf7eaec6a2048211fefc/patchy-2.2.10.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/com.mojang/text2speech/1.19.12/2e517a75c79d34d32de2b5d68422150836c2133e/text2speech-1.19.12.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.22.0/6b3eb4beb7058c2a638f5f17bcb388649fd339dd/commons-codec-1.22.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.20.0/36f3474daec2849c149e877614e7f979b2082cd2/commons-io-2.20.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-buffer/4.2.15.Final/2beb620803bf871cda2dd5d46b8f831e8015dd34/netty-buffer-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec-base/4.2.15.Final/e97149fdd5fb04858efa90e314651c8d700dc68b/netty-codec-base-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec-compression/4.2.15.Final/89fc4a20b7ae6af974304b1695405e62c4f9b16d/netty-codec-compression-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec-http/4.2.15.Final/e611826aa054371bb9a17f27bdb05755a4cac5f0/netty-codec-http-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-common/4.2.15.Final/7222492c1af9c2d4d78d521eea340a619e242fda/netty-common-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-handler/4.2.15.Final/d5344afd1148e3b9927a74be019605ebb0937a93/netty-handler-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-resolver/4.2.15.Final/b961a16d379b508b473e064ba06842bba280f4e3/netty-resolver-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-classes-epoll/4.2.15.Final/44bafba9c9993800e955b365bba4981326f3f3b1/netty-transport-classes-epoll-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-classes-kqueue/4.2.15.Final/f248656bb907607c5a41c7b61fd918a97db79250/netty-transport-classes-kqueue-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.2.15.Final/cccd31f2c8e966ab1e7a4d2293c8a3965628fe73/netty-transport-native-epoll-4.2.15.Final-linux-aarch_64.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.2.15.Final/ce256127f8ed3f076756f1f4dcb5877d65d1f1c2/netty-transport-native-epoll-4.2.15.Final-linux-x86_64.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-unix-common/4.2.15.Final/efb6943b4de9e0226a5ac35330f232605424af02/netty-transport-native-unix-common-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport/4.2.15.Final/a000c3a6196ee40207b73ac619dcb339409dd62f/netty-transport-4.2.15.Final.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/it.unimi.dsi/fastutil/8.5.18/a6cff377eecc19c2037bf31568a6d7106b50ba1f/fastutil-8.5.18.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna-platform/5.17.0/a4934c44d25a9d8c2ddf4203affd20330cb3426f/jna-platform-5.17.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/5.17.0/33d12735bef894440780fce64f9758d420c7bae2/jna-5.17.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/net.sf.jopt-simple/jopt-simple/5.0.4/4fdac2fbe92dfad86aa6e9301736f6b4342a3f5c/jopt-simple-5.0.4.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.28.0/e482f2c7a88dac3c497e96aa420b6a769f59c8d7/commons-compress-1.28.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.20.0/65897b3e5731220962e659e001904af3c3cbeba9/commons-lang3-3.20.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.26.0/ad52af0ecf054a7e3f275a2e180ee06d9c490951/log4j-api-2.26.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.26.0/d267ca60b27ddb075e0b4e75e7875859717bf85f/log4j-core-2.26.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j2-impl/2.26.0/668c0f0e813d83f00a7182533aa658ec7e7a0a0d/log4j-slf4j2-impl-2.26.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.jcraft/jorbis/0.0.17/8872d22b293e8f5d7d56ff92be966e6dc28ebdc6/jorbis-0.0.17.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.joml/joml/1.10.8/fc0a71dad90a2cf41d82a76156a0e700af8e4f8d/joml-1.10.8.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-freetype/3.4.1/caa75a37e857efc9b0686e434d708d6420c5b6ea/lwjgl-freetype-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.4.1/a782b1ddd175c9107bf300fd92920579ea65e2a4/lwjgl-glfw-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.4.1/16b663092854fc6adfe0a941e61cae2bb2e437b6/lwjgl-jemalloc-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.4.1/8508bd60589de0539aa465b78fcf838efd07ae9a/lwjgl-openal-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.4.1/830412cab823c029cda6b9729f9d2ed36cf79959/lwjgl-opengl-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-shaderc/3.4.1/5c02c88f0d879529014c78463b76f43fdecfd272/lwjgl-shaderc-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-spvc/3.4.1/188553592e97b5ab2dba54a1b403ee80b48dad4c/lwjgl-spvc-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.4.1/f077c3dafc31924fbe8acb0b913f08977ba27f8e/lwjgl-stb-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.4.1/562697d40dbd2ed0424bf24dcf65d51170f81adf/lwjgl-tinyfd-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-vma/3.4.1/2c54ce10154feb1ede4d23c5947438cdbfdcc003/lwjgl-vma-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-vulkan/3.4.1/d0601fdc38890755e5638048c14cc0f7b990964b/lwjgl-vulkan-3.4.1.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.4.1/129e06a04f93992cb2a45172435b21fc4b60dd7d/lwjgl-3.4.1-unsafe.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.17/d9e58ac9c7779ba3bf8142aff6c830617a7fe60f/slf4j-api-2.0.17.jar
-[Architectury Transformer DEBUG]  - /home/user/HealthIndicators/.gradle/loom-cache/minecraftMaven/net/minecraft/minecraft-merged-fc98c8a68a/26.2/minecraft-merged-fc98c8a68a-26.2.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-kqueue/4.2.15.Final/4245380831515fb4eca18d32477a27fbb8f7b8f4/netty-transport-native-kqueue-4.2.15.Final-osx-x86_64.jar
-[Architectury Transformer DEBUG]  - /root/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-kqueue/4.2.15.Final/8ea0ef3eb716d821332e4b4926825a4b7c1a6d38/netty-transport-native-kqueue-4.2.15.Final-osx-aarch_64.jar
-[Architectury Transformer] Read classpath in 1.839 s
-[Architectury Transformer DEBUG] Remapping Classes:
-[Architectury Transformer DEBUG] net/fabricmc/api/EnvType -> net/neoforged/api/distmarker/Dist
-[Architectury Transformer DEBUG] net/fabricmc/api/Environment -> net/neoforged/api/distmarker/OnlyIn
-[Architectury Transformer DEBUG] Found class transformer
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/HealthIndicatorsCommon with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/HudRenderer$HudHeartType with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/RenderTracker with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/DamageDirectionIndicatorRenderer with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/ServerPermissionPayload with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/HudRenderer with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/ServerPermissions with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/PingPayload with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/ConfigUtils with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/Util with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/RenderUtils with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/util/HeartJumpData with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/mixin/EntityRendererMixin with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/mixin/EntityDamageMixin with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/HealthDisplayTypeEnum with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/HeartTypeEnum with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/ArmorTypeEnum with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/MessageTypeEnum with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/IndicatorLocationEnum with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/enums/DamageReasonEnum with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/config/Config with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/config/ModConfig with maxs=true frames=true
-[Architectury Transformer DEBUG] Writing io/github/adytech99/healthindicators/config/EntitiesListGroup with maxs=true frames=true
-[Architectury Transformer DEBUG] Closed File Systems for /home/user/HealthIndicators/common/build/libs/HealthIndicators-common-26.2-1-transformProductionNeoForge.jar
-[Architectury Transformer] Transformed jar with 5 transformer(s) in 2.476 s
+[Architectury Transformer] Transformed jar with 5 transformer(s) in 3.392 s
