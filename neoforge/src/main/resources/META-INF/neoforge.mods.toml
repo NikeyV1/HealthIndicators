@@ -16,21 +16,21 @@ logoFile = "assets/healthindicators/icon.png"
 [[dependencies.healthindicators]]
 modId = "neoforge"
 type = "required"
-versionRange = "[21.11,)"
+versionRange = "[26.2,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.healthindicators]]
 modId = "minecraft"
 type = "required"
-versionRange = "[1.21.11,)"
+versionRange = "[26.2,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.healthindicators]]
 modId = "architectury"
 type = "required"
-versionRange = "[19.0.1,)"
+versionRange = "[21.0.2,)"
 ordering = "AFTER"
 side = "BOTH"
 
